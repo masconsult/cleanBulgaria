@@ -8,6 +8,7 @@ import eu.masconsult.connection.ConnectionException;
 
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,8 +42,7 @@ public class LoginActivity extends RoboActivity{
 			public void onClick(View arg0) {
 					try {
 						connection.login(username.getText().toString(), password.getText().toString());
-						Toast toast = Toast.makeText(getApplicationContext(), "Successful login", Toast.LENGTH_SHORT);
-						toast.show();
+						startActivity(new Intent(getApplicationContext(), MainScreenActivity.class));
 					} catch (ConnectionException e) {
 						Toast toast = Toast.makeText(getApplicationContext(), "Incorect login data.", Toast.LENGTH_SHORT);
 						toast.show();
