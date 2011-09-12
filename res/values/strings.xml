@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">CleanBulgaria</string>
+    <string name="emailLabelText">Е-мейл:</string>
+    <string name="passwordLabelText">Парола:</string>
+    <string name="loginButtonText">Влез</string>
+    <string name="emptyFieldsMessage">Попълнете празните полета</string>
+    <string name="invalidEmaul">Въведете валиден Е-Майл</string>
 </resources>
