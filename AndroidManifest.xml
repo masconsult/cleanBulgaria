@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="eu.masconsult"
       android:versionCode="1"
-      android:versionName="1.0">
+      android:versionName="1.0" package="eu.masconsult.cleanbulgaria">
     <uses-sdk android:minSdkVersion="8" />
 
-    <application android:label="@string/app_name">
-        <activity android:name=".HomeActivity"
+    <application android:label="@string/app_name" android:name=".CleanBulgariaApplication">
+        <activity android:name=".LoginActivity"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
