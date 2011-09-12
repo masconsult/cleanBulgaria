@@ -1,8 +1,13 @@
-package eu.masconsult;
+package eu.masconsult.activity;
 
 
 import com.google.inject.Inject;
 
+import eu.masconsult.PositionException;
+import eu.masconsult.PositionManager;
+import eu.masconsult.R;
+import eu.masconsult.R.id;
+import eu.masconsult.R.layout;
 import eu.masconsult.connection.Connection;
 import eu.masconsult.connection.ConnectionException;
 
@@ -26,6 +31,8 @@ public class LoginActivity extends RoboActivity{
 	TextView password;
 	@Inject
 	Connection connection;
+	@Inject
+	PositionManager positionManager;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +42,12 @@ public class LoginActivity extends RoboActivity{
 	}
 	
 	private void init() {
+		try {
+			positionManager.initPositionManager(getApplicationContext());
+		} catch (PositionException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		username.setText("dani7@abv.bg");
 		password.setText("alabala");
 		loginBtn.setOnClickListener(new OnClickListener() {

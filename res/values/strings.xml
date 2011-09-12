@@ -2,4 +2,9 @@
     <string name="app_name">Clean Bulgaria</string>
     <string name="login_btn">Влез</string>
     <string name="markPlaceBtn">Маркирай място</string>
+    <string name="uploadBtn">Маркирай</string>
+    <string name="garbageType">Тип на отпадъците</string>
+    <string name="lightGarbage">Леки отпадъци</string>
+    <string name="heavyGarbage">Тежки отпадъци</string>
+    <string name="commentLabel">Допълнителна информация</string>
 </resources>

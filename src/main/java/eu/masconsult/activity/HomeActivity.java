@@ -1,4 +1,4 @@
-package eu.masconsult;
+package eu.masconsult.activity;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -1,8 +1,12 @@
-package eu.masconsult;
+package eu.masconsult.activity;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Set;
+
+import eu.masconsult.R;
+import eu.masconsult.R.id;
+import eu.masconsult.R.layout;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -45,7 +49,7 @@ public class MainScreenActivity extends RoboActivity {
 	}
 	
 	private void showUploadScreen(File image) {
-		
+		startActivity(new Intent(getApplicationContext(), UploadScreenActivity.class));
 	}
 	
 	private void savePicture(Bitmap image) {
@@ -54,11 +58,12 @@ public class MainScreenActivity extends RoboActivity {
 			File dir = new File(sdCard.getAbsolutePath()
 					+ "/cleanBulgaria");
 			dir.mkdirs();
-			File file = new File(dir, "img.jpeg");
-			file.createNewFile();
+			File imageFile = new File(dir, "img.jpeg");
+			imageFile.createNewFile();
 
-			FileOutputStream out = new FileOutputStream(file);
+			FileOutputStream out = new FileOutputStream(imageFile);
 			image.compress(Bitmap.CompressFormat.JPEG, 100, out);
+			showUploadScreen(imageFile);
 		} catch (Exception e) {
 			Toast.makeText(this, "Picture was not taken",
 					Toast.LENGTH_LONG).show();

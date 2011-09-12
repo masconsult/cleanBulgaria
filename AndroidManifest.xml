@@ -5,17 +5,20 @@
 
 	<application android:label="@string/app_name"
 		android:name="eu.masconsult.CleanBulgariaApplication">
-		<activity android:name=".LoginActivity" android:label="@string/app_name">
+		<activity android:name="eu.masconsult.activity.LoginActivity" android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name="eu.masconsult.MainScreenActivity" />
+		<activity android:name="eu.masconsult.activity.MainScreenActivity" />
+		<activity android:name="eu.masconsult.activity.UploadScreenActivity" />
 	</application>
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 	<uses-feature android:name="android.hardware.camera" />
 	<uses-feature android:name="android.hardware.camera.autofocus" />
 </manifest>

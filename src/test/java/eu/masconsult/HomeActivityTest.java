@@ -1,6 +1,9 @@
 package eu.masconsult;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
+
+import eu.masconsult.activity.HomeActivity;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
