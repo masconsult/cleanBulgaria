@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="match_parent"
+	android:layout_height="match_parent">
+	<TextView android:id="@+id/emailLabel" android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:text="Email:"
+		android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
+		android:layout_marginTop="150dp"></TextView>
+	<EditText android:id="@+id/emailText" android:layout_height="wrap_content"
+		android:layout_width="wrap_content" android:inputType="textEmailAddress"
+		android:layout_alignBaseline="@+id/emailLabel"
+		android:layout_alignBottom="@+id/emailLabel" android:layout_toRightOf="@+id/emailLabel"
+		android:layout_alignParentRight="true" android:layout_marginLeft="30dp">
+
+	</EditText>
+	<TextView android:id="@+id/passwordLabel"
+		android:layout_height="wrap_content" android:layout_width="wrap_content"
+		android:text="Password:" android:layout_below="@+id/emailText"
+		android:layout_alignParentLeft="true" android:layout_marginTop="45dp"></TextView>
+
+	<EditText android:id="@+id/passwordText"
+		android:layout_height="wrap_content" android:layout_width="wrap_content"
+		android:inputType="textPassword" android:layout_alignBaseline="@+id/passwordLabel"
+		android:layout_alignBottom="@+id/passwordLabel"
+		android:layout_alignParentRight="true" android:layout_alignLeft="@+id/emailText"></EditText>
+	<Button android:id="@+id/loginButton" android:text="Login"
+		android:layout_height="wrap_content" android:layout_below="@+id/passwordText"
+		android:layout_centerHorizontal="true"
+		android:layout_marginTop="40dp" android:layout_width="110dp"></Button>
+
+
+
+
+
+</RelativeLayout>
