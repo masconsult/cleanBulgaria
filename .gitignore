@@ -4,3 +4,7 @@
 .idea/
 tmp/
 target/
+.classpath
+.settings
+.project
+gen/
