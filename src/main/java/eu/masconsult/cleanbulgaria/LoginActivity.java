@@ -5,7 +5,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
@@ -25,23 +24,23 @@ public class LoginActivity extends RoboActivity {
 	
 	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_layout);
-		validationToast = Toast.makeText(getApplicationContext(), "", 2);
 		
 		loginButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				if(emailTextEdit.getText().toString().isEmpty() || passwordTextEdit.getText().toString().isEmpty()) {
-					validationToast.setText("Попълнете Полетата");
+					validationToast = Toast.makeText(getApplicationContext(), "Попълнете Полетата", 2);
 					validationToast.show();
 					return;
 				}
 				if(!emailTextEdit.getText().toString().contains("@")) {
-					validationToast.setText("Невалиден Е-мейл");
+					validationToast = Toast.makeText(getApplicationContext(), "Невалиден Е-мейл", 2);
 					validationToast.show();
+					return;
 				}
 			}
 		});
