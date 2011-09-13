@@ -1,5 +1,9 @@
 package eu.masconsult.cleanbulgaria;
 
+import java.io.IOException;
+
+import com.google.inject.Inject;
+
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,7 +24,10 @@ public class LoginActivity extends RoboActivity {
 	@InjectView(R.id.loginButton)
 	Button loginButton;
 	
-	Toast validationToast;
+	//Toast validationToast;
+	
+	@Inject
+	Connection connection;
 	
 	
 	@Override
@@ -28,20 +35,28 @@ public class LoginActivity extends RoboActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login_layout);
 		
+		
 		loginButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				if(emailTextEdit.getText().toString().isEmpty() || passwordTextEdit.getText().toString().isEmpty()) {
-					validationToast = Toast.makeText(getApplicationContext(), "Попълнете Полетата", 2);
+				if(emailTextEdit.length() == 0  || passwordTextEdit.length() == 0) {
+					Toast validationToast = Toast.makeText(getApplicationContext(), "Попълнете Полетата", 2);
 					validationToast.show();
 					return;
 				}
-				if(!emailTextEdit.getText().toString().contains("@")) {
-					validationToast = Toast.makeText(getApplicationContext(), "Невалиден Е-мейл", 2);
+				String email = emailTextEdit.getText().toString();
+				String password  = passwordTextEdit.getText().toString();
+				
+				try {
+					connection.login(email, password);
+				} catch (InvalidDataException e) {
+					Toast validationToast = Toast.makeText(getApplicationContext(), "Невалиден Е-Мейл или парола", 2);
 					validationToast.show();
-					return;
+				} catch (ConnectionException e) {
+					
 				}
+				
 			}
 		});
 	}
