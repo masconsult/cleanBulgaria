@@ -4,6 +4,10 @@ import java.io.IOException;
 
 import com.google.inject.Inject;
 
+import eu.masconsult.cleanbulgaria.connection.Connection;
+import eu.masconsult.cleanbulgaria.connection.ConnectionException;
+import eu.masconsult.cleanbulgaria.connection.InvalidDataException;
+
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;

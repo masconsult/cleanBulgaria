@@ -2,7 +2,7 @@ package eu.masconsult.cleanbulgaria.guice;
 
 import com.google.inject.Singleton;
 
-import eu.masconsult.cleanbulgaria.Connection;
+import eu.masconsult.cleanbulgaria.connection.Connection;
 import roboguice.config.AbstractAndroidModule;
 
 public class CleanBulgariaConfigurationModule extends AbstractAndroidModule {

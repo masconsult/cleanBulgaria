@@ -1,4 +1,4 @@
-package eu.masconsult.cleanbulgaria;
+package eu.masconsult.cleanbulgaria.connection;
 
 public class InvalidDataException extends Exception {
 
