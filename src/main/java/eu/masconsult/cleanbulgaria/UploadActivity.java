@@ -12,21 +12,41 @@ import android.view.View.OnClickListener;
 public class UploadActivity extends RoboActivity {
 
 	@InjectView(R.id.wasteTypeSelectButton)
-	Button wasteTypeSelectButton;
+	private Button wasteTypeSelectButton;
+	
+	
+	private AlertDialog alert;
+	
+	private final CharSequence[] items = {
+			"Леки Битови Отпадъци", 
+			"Тежки битови отпадъци", 
+			"Строителни",
+			"Индустриални",
+			"Други"
+		};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.upload_screen_layout);
-		
-		final CharSequence[] items = {
-				"Леки Битови Отпадъци", 
-				"Тежки битови отпадъци", 
-				"Строителни",
-				"Индустриални",
-				"Други"
-			};
-		final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		final AlertDialog.Builder dialogBuilder = setUpDialogBuilder();
+
+		wasteTypeSelectButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				alert = dialogBuilder.create();
+				alert.show();
+			}
+		});
+	}
+	
+	public AlertDialog getDialog() {
+		return alert;
+	}
+	
+	public AlertDialog.Builder setUpDialogBuilder() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Тип на отпадъците");
 		builder.setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
 			
@@ -36,15 +56,7 @@ public class UploadActivity extends RoboActivity {
 			}
 		
 		});
-
-		wasteTypeSelectButton.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				AlertDialog alert = builder.create();
-				alert.show();
-				
-			}
-		});
+		
+		return builder;
 	}
 }
