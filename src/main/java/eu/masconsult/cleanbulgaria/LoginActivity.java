@@ -1,13 +1,20 @@
 package eu.masconsult.cleanbulgaria;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.client.ClientProtocolException;
 
 import com.google.inject.Inject;
 
 import eu.masconsult.cleanbulgaria.connection.Connection;
 import eu.masconsult.cleanbulgaria.connection.ConnectionException;
 import eu.masconsult.cleanbulgaria.connection.InvalidDataException;
+import eu.masconsult.cleanbulgaria.connection.MarkRequestData;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,8 +34,6 @@ public class LoginActivity extends RoboActivity {
 	
 	@InjectView(R.id.loginButton)
 	Button loginButton;
-	
-	//Toast validationToast;
 	
 	@Inject
 	Connection connection;
@@ -51,12 +56,13 @@ public class LoginActivity extends RoboActivity {
 				}
 				String email = emailTextEdit.getText().toString();
 				String password  = passwordTextEdit.getText().toString();
-				
-				try {
+				try {		
 					connection.login(email, password);
+					startActivity(new Intent(getApplicationContext(), MainActivity.class));
 				} catch (InvalidDataException e) {
 					Toast validationToast = Toast.makeText(getApplicationContext(), "Невалиден Е-Мейл или парола", 2);
 					validationToast.show();
+					return;
 				} catch (ConnectionException e) {
 					
 				}
