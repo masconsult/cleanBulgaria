@@ -2,6 +2,7 @@ package eu.masconsult.cleanbulgaria;
 
 
 
+import static org.junit.Assert.*;
 import junit.framework.Assert;
 
 import org.junit.Before;
@@ -41,9 +42,21 @@ public class UploadSreenTest {
 		selectWasteType.performClick();
 		ShadowAlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
 		
-		dialog.clickOnItem(9);
+		dialog.clickOnItem(0);
 		dialog.clickOnItem(2);
-	}
+		
+		boolean[] actual = dialog.getCheckedItems();
+		boolean[] expected = new boolean[5];
+		expected[0] = true;
+		expected[2] = true;
+		
+		for(int i = 0; i < 5; i++) {
+			if(expected[i] != actual[i])
+				fail();
+		}
+		
+		
+	} 
 	
 	
 }

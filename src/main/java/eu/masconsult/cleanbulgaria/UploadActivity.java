@@ -18,10 +18,6 @@ public class UploadActivity extends RoboActivity {
 	@InjectView(R.id.wasteTypeSelectButton)
 	private Button wasteTypeSelectButton;
 	
-	
-	
-	
-	
 	private boolean[] wasteTypes = new boolean[5];
 	
 	private AlertDialog alert;
@@ -75,10 +71,11 @@ public class UploadActivity extends RoboActivity {
 			
 		
 		});
-		
-		
-		
 		return builder;
+	}
+	
+	public boolean[] getWasteTypes() {
+		return wasteTypes;
 	}
 	
 	
