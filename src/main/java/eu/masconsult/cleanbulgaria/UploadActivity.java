@@ -1,5 +1,9 @@
 package eu.masconsult.cleanbulgaria;
 
+import java.util.Collection;
+import java.util.HashMap;
+
+import android.R.bool;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -15,6 +19,11 @@ public class UploadActivity extends RoboActivity {
 	private Button wasteTypeSelectButton;
 	
 	
+	
+	
+	
+	private boolean[] wasteTypes = new boolean[5];
+	
 	private AlertDialog alert;
 	
 	private final CharSequence[] items = {
@@ -29,6 +38,7 @@ public class UploadActivity extends RoboActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.upload_screen_layout);
+		setupWasteTypes();
 		final AlertDialog.Builder dialogBuilder = setUpDialogBuilder();
 
 		wasteTypeSelectButton.setOnClickListener(new OnClickListener() {
@@ -39,8 +49,15 @@ public class UploadActivity extends RoboActivity {
 				alert.show();
 			}
 		});
+	
 	}
 	
+	private void setupWasteTypes() {
+		for(int i = 0; i < 5; i++) {
+			wasteTypes[i] = false;
+		}
+	}
+
 	public AlertDialog getDialog() {
 		return alert;
 	}
@@ -48,15 +65,21 @@ public class UploadActivity extends RoboActivity {
 	public AlertDialog.Builder setUpDialogBuilder() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Тип на отпадъците");
-		builder.setMultiChoiceItems(items, null, new DialogInterface.OnMultiChoiceClickListener() {
+		builder.setMultiChoiceItems(items, wasteTypes, new DialogInterface.OnMultiChoiceClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-				
+				wasteTypes[which] = isChecked;
 			}
+			
+			
 		
 		});
 		
+		
+		
 		return builder;
 	}
+	
+	
 }
