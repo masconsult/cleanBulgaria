@@ -33,7 +33,10 @@ public class UploadActivity extends RoboActivity {
 	private final class UploadDataButtonListener implements OnClickListener {
 		@Override
 		public void onClick(View v) {
+			
+			
 			MarkRequestData markData = setUpMarkData();
+			
 			try {
 				connection.mark(markData);
 			} catch (ClientProtocolException e) {

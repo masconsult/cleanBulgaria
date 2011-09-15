@@ -38,6 +38,16 @@ public class MainActivity extends RoboActivity {
 			}
 		});
 		
+		
+		takePictureButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(getApplicationContext(), TakePhotoActivity.class));
+				
+			}
+		});
+		
 	}
 
 }
