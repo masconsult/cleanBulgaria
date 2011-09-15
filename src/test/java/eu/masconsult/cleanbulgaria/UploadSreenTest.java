@@ -8,9 +8,8 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import android.app.AlertDialog;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 import com.xtremelabs.robolectric.shadows.ShadowAlertDialog;
@@ -21,7 +20,6 @@ public class UploadSreenTest {
 
 	private UploadActivity uploadActivity;
 	private Button selectWasteType;
-	
 	
 	@Before
 	public void setUp() {
@@ -54,9 +52,26 @@ public class UploadSreenTest {
 			if(expected[i] != actual[i])
 				fail();
 		}
-		
-		
-	} 
+	}
 	
+	@Test
+	public void testWasteTypeData() {
+		selectWasteType.performClick();
+		ShadowAlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
+		
+		dialog.clickOnItem(0);
+		dialog.clickOnItem(2);
+		boolean[] expected = new boolean[5];
+		expected[0] = true;
+		expected[2] = true;
+		
+		boolean[] actual = uploadActivity.getWasteTypes();
+		
+		for(int i = 0; i < 5; i++) {
+			if(expected[i] != actual[i])
+				Assert.assertTrue(false);
+		}
+		
+	}
 	
 }

@@ -5,4 +5,5 @@
     <string name="loginButtonText">Влез</string>
     <string name="emptyFieldsMessage">Попълнете празните полета</string>
     <string name="invalidEmaul">Въведете валиден Е-Майл</string>
+    <string name="wasteMetricPrompt">Мярка</string>
 </resources>

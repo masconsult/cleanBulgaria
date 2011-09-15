@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="metricTypes">
+        <item>Чувал(а)</item>
+        <item>Камион(а)</item>
+        <item>Не мога да определя</item>
+    </string-array>
+    
+</resources>

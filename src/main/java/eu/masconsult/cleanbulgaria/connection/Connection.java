@@ -44,8 +44,6 @@ public class Connection {
 		HttpResponse loginResponse;
 		context.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 		
-		
-		
 		try {
 			loginResponse = doLoginPost(email, password);
 		} catch (Exception e) {
@@ -101,7 +99,7 @@ public class Connection {
 		
 		int connectionStatus = response.getStatusLine().getStatusCode();
 		String pageSource = EntityUtils.toString(response.getEntity());
-		
+		System.out.println(pageSource);
 		this.statusCode = connectionStatus;
 	}
 	
@@ -116,7 +114,7 @@ public class Connection {
 	private MultipartEntity setUpMarkParameters(final MarkRequestData data) throws UnsupportedEncodingException {
 		MultipartEntity entity = new MultipartEntity( HttpMultipartMode.BROWSER_COMPATIBLE );
 		
-		entity.addPart( "file[]", new FileBody(data.imageFile, "image/gif"));
+		entity.addPart( "file[]", new FileBody(data.imageFile, "image/jpg"));
 		entity.addPart("address", new StringBody(data.address, "text/plain", utfSet));
 		entity.addPart("lat", new StringBody(data.lat, utfSet));
 		entity.addPart("lng", new StringBody(data.lng, utfSet));
