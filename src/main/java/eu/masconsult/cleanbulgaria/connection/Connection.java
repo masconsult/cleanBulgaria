@@ -1,7 +1,11 @@
 package eu.masconsult.cleanbulgaria.connection;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +16,7 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.ClientContext; 
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
@@ -21,11 +26,14 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 public class Connection {
 
+	private final String loginRedirectUri = "/map/index.php";
+	private final String markSuccess = "/map/thankyou.php";
 	private HttpClient client;
 	private HttpContext context;
 	private CookieStore cookieStore;
@@ -51,18 +59,13 @@ public class Connection {
 		}
 		
 		
+		HttpUriRequest currentRequest = (HttpUriRequest) context.getAttribute(ExecutionContext.HTTP_REQUEST);
 		
-		
-		int connectionStatus = loginResponse.getStatusLine().getStatusCode();
-		String pageSource = null;
-		try {
-			pageSource = EntityUtils.toString(loginResponse.getEntity());
-		} catch (Exception e) {
-			throw new ConnectionException();
-		}
-		if(pageSource.contains("login.php")) {
+		if(!currentRequest.getURI().toString().equals(loginRedirectUri)) {
 			throw new InvalidDataException();
 		}
+		
+		int connectionStatus = loginResponse.getStatusLine().getStatusCode();
 		
 		statusCode = connectionStatus;
 		loggedIn = true;
@@ -72,7 +75,7 @@ public class Connection {
 		return statusCode;
 	}
 
-	private HttpResponse doLoginPost(final String email, final String password) throws ClientProtocolException, IOException  {
+	private HttpResponse doLoginPost(final String email, final String password) throws IOException {
 		List<NameValuePair> loginParameters = setUpLoginParameters(email, password);
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(loginParameters, "UTF-8");
 		HttpPost post = new HttpPost("http://ng.btv.bg/map/login.php");
@@ -90,7 +93,7 @@ public class Connection {
 		return formParameters;
 	}
 	
-	public void mark(final MarkRequestData data) throws ClientProtocolException, IOException {
+	public void mark(final MarkRequestData data) throws InvalidDataException, IOException {
 		if(!loggedIn) {
 			throw new ClientProtocolException();
 		}
@@ -98,8 +101,13 @@ public class Connection {
 		HttpResponse response = doMarkPost(data);
 		
 		int connectionStatus = response.getStatusLine().getStatusCode();
-		String pageSource = EntityUtils.toString(response.getEntity());
-		System.out.println(pageSource);
+		
+		HttpUriRequest currentRequest = (HttpUriRequest) context.getAttribute(ExecutionContext.HTTP_REQUEST);
+		
+
+		if(!currentRequest.getURI().toString().equals(markSuccess)) {
+			throw new InvalidDataException();
+		}
 		this.statusCode = connectionStatus;
 	}
 	
@@ -128,6 +136,10 @@ public class Connection {
 		entity.addPart("submit.y", new StringBody(data.submitY, utfSet));
 		entity.addPart("go", new StringBody("go", utfSet));
 		return entity;
+	}
+	
+	public boolean isLoggedIn() {
+		return isLoggedIn();
 	}
 
 }
