@@ -1,47 +1,83 @@
 package eu.masconsult.cleanbulgaria;
 
-
-
-
 import java.io.File;
 import java.io.IOException;
-
-import org.apache.http.client.ClientProtocolException;
-
 import com.google.inject.Inject;
 
 import eu.masconsult.cleanbulgaria.connection.Connection;
+import eu.masconsult.cleanbulgaria.connection.InvalidDataException;
 import eu.masconsult.cleanbulgaria.connection.MarkRequestData;
 import eu.masconsult.cleanbulgaria.connection.PositionException;
 import eu.masconsult.cleanbulgaria.connection.PositionManager;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 import android.view.View.OnClickListener;
 
 public class UploadActivity extends RoboActivity {
+	
+	@InjectView(R.id.wasteTypeSelectButton)
+	private Button wasteTypeSelectButton;
+	
+	@InjectView(R.id.metricTypeSpinner)
+	private Spinner metricTypeSpinner;
+	
+	@InjectView(R.id.quantatyText)
+	private EditText quantatyText;
+	
+	@InjectView(R.id.uploadDataButton)
+	private Button uploadDataButton;
+	
+	@InjectView(R.id.wasteInfoTextEdit)
+	private EditText wasteInfoTextEdit;
+	
+	@Inject
+	private PositionManager positionManager;
+	
+	@Inject 
+	private Connection connection;
+	
+	private Uri imageFileUri = null;
+	
+	private boolean[] selectedWasteTypes = new boolean[5];
+	
+	private String metric;
+	
+	private AlertDialog selectWasteTypeDialog;
+	
+	private final CharSequence[] wasteTypes = {
+			"Леки Битови Отпадъци", 
+			"Тежки битови отпадъци", 
+			"Строителни",
+			"Индустриални",
+			"Други"
+	};
 
 	private final class UploadDataButtonListener implements OnClickListener {
 		@Override
 		public void onClick(View v) {
-			
-			
+			if(!isDataValid()) {
+				return;
+			}
 			MarkRequestData markData = setUpMarkData();
-			
 			try {
 				connection.mark(markData);
-			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (InvalidDataException e) {
+				Toast toast = Toast.makeText(getApplicationContext(), "Невалидни данни", 3);
+				toast.show();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -78,39 +114,7 @@ public class UploadActivity extends RoboActivity {
 		}
 	}
 
-	@InjectView(R.id.wasteTypeSelectButton)
-	private Button wasteTypeSelectButton;
 	
-	@InjectView(R.id.metricTypeSpinner)
-	Spinner metricTypeSpinner;
-	
-	@InjectView(R.id.quantatyText)
-	EditText quantatyText;
-	
-	@InjectView(R.id.uploadDataButton)
-	Button uploadDataButton;
-	
-	@InjectView(R.id.wasteInfoTextEdit)
-	EditText wasteInfoTextEdit;
-	
-	@Inject
-	PositionManager positionManager;
-	
-	@Inject 
-	Connection connection;
-	
-	private boolean[] selectedWasteTypes = new boolean[5];
-	private String metric;
-	
-	private AlertDialog selectWasteTypeDialog;
-	
-	private final CharSequence[] wasteTypes = {
-			"Леки Битови Отпадъци", 
-			"Тежки битови отпадъци", 
-			"Строителни",
-			"Индустриални",
-			"Други"
-		};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +124,6 @@ public class UploadActivity extends RoboActivity {
 		final AlertDialog.Builder dialogBuilder = setUpDialogBuilder();
 		wasteTypeSelectButton.setOnClickListener(new WasteTypeButtonListener(dialogBuilder));
 		uploadDataButton.setOnClickListener(new UploadDataButtonListener());
-		
 		setUpMetricSpinner();
 		try {
 			positionManager.initPositionManager(getApplicationContext());
@@ -128,7 +131,8 @@ public class UploadActivity extends RoboActivity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	    
+		imageFileUri = (Uri)getIntent().getData();
+		Location loc = positionManager.getPosition();
 	}
 
 	private void setUpMetricSpinner() {
@@ -153,6 +157,7 @@ public class UploadActivity extends RoboActivity {
 
 	
 	private MarkRequestData setUpMarkData() {
+	
 		MarkRequestData data = new MarkRequestData();
 		for(int i = 0; i < selectedWasteTypes.length; i++) {
 			if(selectedWasteTypes[i] == true) {
@@ -162,19 +167,49 @@ public class UploadActivity extends RoboActivity {
 		data.wasteVolume = quantatyText.getText().toString();
 		data.wasteMetric = metric;
 		data.wasteInfo = wasteInfoTextEdit.getText().toString();
-		data.imageFile = new File("/sdcard/waste.jpg");
+		data.imageFile = new File(imageFileUri.toString());
 		data.address = "Пловдив, Тракия, Лаута";
 		data.lat = "42.138877";
 		data.lng = "24.774903";
 		data.submitX = "106";
 		data.submitY = "12";
-		System.out.println(data);
-		
+
 		return data;
 	}
 	
+	private boolean isDataValid() {
+		if(!isWasteTypeSelected()) {
+			Toast noSelectedWasteTypes = Toast.makeText(getApplicationContext(), "Моля изберета тип на боклука", 3);
+			noSelectedWasteTypes.show();
+			return false;
+		}
+		if(metric.isEmpty()) {
+			Toast noSelectedMetric = Toast.makeText(getApplicationContext(), "Моля изберете мярка", 3);
+			noSelectedMetric.show();
+			return false;
+		}
+		if(quantatyText.getText().toString().isEmpty()) {
+			Toast noQuantaty = Toast.makeText(getApplicationContext(), "Моля въведете количество", 3);
+			noQuantaty.show();
+			return false;
+		}
+		if(imageFileUri == null) {
+			Toast invalidFile = Toast.makeText(getApplicationContext(), "Невалидна снимка", 3);
+			invalidFile.show();
+		}
+		return true;
+	}
+
+	private boolean isWasteTypeSelected() {
+		for(int i = 0; i < selectedWasteTypes.length; i++) {
+			if(selectedWasteTypes[i] == true) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public boolean[] getWasteTypes() {
 		return selectedWasteTypes;
 	}
-	
 }

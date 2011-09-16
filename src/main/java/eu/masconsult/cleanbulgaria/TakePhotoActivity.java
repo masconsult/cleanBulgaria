@@ -1,83 +1,74 @@
 package eu.masconsult.cleanbulgaria;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
-import android.hardware.Camera;
-import android.hardware.Camera.PictureCallback;
-import android.hardware.Camera.ShutterCallback;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Set;
+
+import android.content.ContentValues;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.FrameLayout;
+import android.widget.Toast;
 import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 
 public class TakePhotoActivity extends RoboActivity {
-	private static final String TAG = "CameraDemo";
-	Camera camera;
-	Preview preview;
-	Button buttonClick;
 
-	/** Called when the activity is first created. */
+	private static final int CAPTURE_IMAGE_REQUEST = 1;
+
+	private Uri imageUri;
+
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.preview_photo_layout);
-
-		preview = new Preview(this);
-		((FrameLayout) findViewById(R.id.preview)).addView(preview);
-
-		buttonClick = (Button) findViewById(R.id.buttonClick);
-		buttonClick.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
-				preview.camera.takePicture(shutterCallback, rawCallback,
-						jpegCallback);
-			}
-		});
-
-		Log.d(TAG, "onCreate'd");
+		init();
 	}
 
-	ShutterCallback shutterCallback = new ShutterCallback() {
-		public void onShutter() {
-			Log.d(TAG, "onShutter'd");
-		}
-	};
+	private void init() {
+		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		startActivityForResult(intent, CAPTURE_IMAGE_REQUEST);
+	}
 
-	/** Handles data for raw picture */
-	PictureCallback rawCallback = new PictureCallback() {
-		public void onPictureTaken(byte[] data, Camera camera) {
-			Log.d(TAG, "onPictureTaken - raw");
-		}
-	};
+	private void showUploadScreen(File image) {
+		Intent uploadData = new Intent(getApplicationContext(), UploadActivity.class);
+		uploadData.setData(imageUri);
+		startActivity(uploadData);
+	}
 
-	/** Handles data for jpeg picture */
-	PictureCallback jpegCallback = new PictureCallback() {
-		public void onPictureTaken(byte[] data, Camera camera) {
-			FileOutputStream outStream = null;
-			try {
-				// write to local sandbox file system
-				// outStream =
-				// CameraDemo.this.openFileOutput(String.format("%d.jpg",
-				// System.currentTimeMillis()), 0);
-				// Or write to sdcard
-				outStream = new FileOutputStream(String.format(
-						"/sdcard/%d.jpg", System.currentTimeMillis()));
-				outStream.write(data);
-				outStream.close();
-				Log.d(TAG, "onPictureTaken - wrote bytes: " + data.length);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
+	private void savePicture(Bitmap image) {
+		try {
+			File sdCard = Environment.getExternalStorageDirectory();
+			File dir = new File(sdCard.getAbsolutePath() + "/cleanBulgaria");
+			dir.mkdirs();
+			File imageFile = new File(dir, "img.jpeg");
+			imageFile.createNewFile();
+
+			FileOutputStream out = new FileOutputStream(imageFile);
+			image.compress(Bitmap.CompressFormat.JPEG, 100, out);
+			imageUri = Uri.parse(imageFile.getAbsolutePath());
+			showUploadScreen(imageFile);
+		} catch (Exception e) {
+			Toast.makeText(this, "Picture was not taken", Toast.LENGTH_LONG)
+					.show();
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+		if (requestCode == CAPTURE_IMAGE_REQUEST) {
+			if (resultCode == RESULT_OK) {
+				Bitmap image = (Bitmap) data.getExtras().get("data");
+				savePicture(image);
 			}
-			Log.d(TAG, "onPictureTaken - jpeg");
 		}
-	};
+	}
 
 }
-
