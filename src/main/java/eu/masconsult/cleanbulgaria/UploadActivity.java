@@ -12,10 +12,10 @@ import eu.masconsult.cleanbulgaria.connection.PositionManager;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -173,13 +173,13 @@ public class UploadActivity extends RoboActivity {
 		data.lng = "24.774903";
 		data.submitX = "106";
 		data.submitY = "12";
-
+		System.out.println(imageFileUri);
 		return data;
 	}
 	
 	private boolean isDataValid() {
 		if(!isWasteTypeSelected()) {
-			Toast noSelectedWasteTypes = Toast.makeText(getApplicationContext(), "Моля изберета тип на боклука", 3);
+			Toast noSelectedWasteTypes = Toast.makeText(getApplicationContext(), "Моля изберете тип на боклука", 3);
 			noSelectedWasteTypes.show();
 			return false;
 		}
@@ -200,6 +200,11 @@ public class UploadActivity extends RoboActivity {
 		return true;
 	}
 
+	@Override
+	public void onBackPressed() {
+		startActivity(new Intent(getApplicationContext(), MainActivity.class));
+	}
+	
 	private boolean isWasteTypeSelected() {
 		for(int i = 0; i < selectedWasteTypes.length; i++) {
 			if(selectedWasteTypes[i] == true) {

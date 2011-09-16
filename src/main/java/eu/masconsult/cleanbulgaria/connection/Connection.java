@@ -11,12 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.params.ClientPNames;
 import org.apache.http.client.protocol.ClientContext; 
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
@@ -36,7 +38,6 @@ public class Connection {
 	private final String markSuccess = "/map/thankyou.php";
 	private HttpClient client;
 	private HttpContext context;
-	private CookieStore cookieStore;
 	private int statusCode;
 	private Charset utfSet = Charset.forName("UTF-8");
 	private boolean loggedIn = false;
@@ -44,21 +45,28 @@ public class Connection {
 	public Connection() {
 		client = new DefaultHttpClient();
 		context = new BasicHttpContext();
-		cookieStore = new BasicCookieStore();
+		client.getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
 	}
 
 	public void login(final String email, final String password) throws InvalidDataException, ConnectionException {
 		
 		HttpResponse loginResponse;
-		context.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 		
 		try {
 			loginResponse = doLoginPost(email, password);
 		} catch (Exception e) {
-			throw new ConnectionException();
+			throw new ConnectionException(e);
 		}
 		
-		
+		try {
+			String pageSource = EntityUtils.toString(loginResponse.getEntity());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		HttpUriRequest currentRequest = (HttpUriRequest) context.getAttribute(ExecutionContext.HTTP_REQUEST);
 		
 		if(!currentRequest.getURI().toString().equals(loginRedirectUri)) {
@@ -97,14 +105,13 @@ public class Connection {
 		if(!loggedIn) {
 			throw new ClientProtocolException();
 		}
-		context.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
 		HttpResponse response = doMarkPost(data);
 		
 		int connectionStatus = response.getStatusLine().getStatusCode();
 		
 		HttpUriRequest currentRequest = (HttpUriRequest) context.getAttribute(ExecutionContext.HTTP_REQUEST);
 		
-
+		EntityUtils.toString(response.getEntity());
 		if(!currentRequest.getURI().toString().equals(markSuccess)) {
 			throw new InvalidDataException();
 		}
@@ -135,11 +142,12 @@ public class Connection {
 		entity.addPart("submit.x", new StringBody(data.submitX, utfSet));
 		entity.addPart("submit.y", new StringBody(data.submitY, utfSet));
 		entity.addPart("go", new StringBody("go", utfSet));
+	
 		return entity;
 	}
 	
 	public boolean isLoggedIn() {
-		return isLoggedIn();
+		return loggedIn;
 	}
 
 }

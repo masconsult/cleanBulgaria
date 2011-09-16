@@ -1,18 +1,12 @@
 package eu.masconsult.cleanbulgaria;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.apache.http.client.ClientProtocolException;
 
 import com.google.inject.Inject;
 
 import eu.masconsult.cleanbulgaria.connection.Connection;
 import eu.masconsult.cleanbulgaria.connection.ConnectionException;
 import eu.masconsult.cleanbulgaria.connection.InvalidDataException;
-import eu.masconsult.cleanbulgaria.connection.MarkRequestData;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,24 +32,30 @@ public class LoginActivity extends RoboActivity {
 	@Inject
 	Connection connection;
 	
+	private boolean loggedIn = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if(loggedIn) {
+			startActivity(new Intent(getApplicationContext(), MainActivity.class));
+		}
 		setContentView(R.layout.login_layout);
-		
-		
+		if(connection.isLoggedIn()) {
+			startActivity(new Intent(getApplicationContext(), MainActivity.class));
+		}
 		loginButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				if(emailTextEdit.length() == 0  || passwordTextEdit.length() == 0) {
+	
+				String email = emailTextEdit.getText().toString();
+				String password  = passwordTextEdit.getText().toString();
+				if(email.isEmpty() || password.isEmpty()) {
 					Toast validationToast = Toast.makeText(getApplicationContext(), "Попълнете Полетата", 2);
 					validationToast.show();
 					return;
 				}
-				String email = emailTextEdit.getText().toString();
-				String password  = passwordTextEdit.getText().toString();
 				try {		
 					connection.login(email, password);
 					startActivity(new Intent(getApplicationContext(), MainActivity.class));
@@ -63,8 +63,8 @@ public class LoginActivity extends RoboActivity {
 					Toast validationToast = Toast.makeText(getApplicationContext(), "Невалиден Е-Мейл или парола", 2);
 					validationToast.show();
 					return;
-				} catch (ConnectionException e) {
-					
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 				
 			}
