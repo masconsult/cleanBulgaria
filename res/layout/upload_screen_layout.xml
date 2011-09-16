@@ -26,10 +26,9 @@
 	<EditText android:id="@+id/wasteInfoTextEdit"
 		android:inputType="textMultiLine" android:layout_below="@+id/wasteInfoLabel"
 		android:layout_alignParentLeft="true" android:layout_alignParentRight="true"
-		android:layout_width="130dp" android:layout_height="130dp"></EditText>
+		android:layout_width="130dp" android:layout_height="100dp"></EditText>
 	<Button android:layout_height="wrap_content" android:text="Маркирай"
-		android:layout_below="@+id/wasteInfoTextEdit"
-		android:layout_centerHorizontal="true" android:layout_marginTop="29dp"
-		android:layout_width="100dp" android:id="@+id/uploadDataButton"></Button>
+		android:layout_centerHorizontal="true" android:layout_width="100dp"
+		android:id="@+id/uploadDataButton" android:layout_below="@+id/wasteInfoTextEdit"></Button>
 
 </RelativeLayout>
