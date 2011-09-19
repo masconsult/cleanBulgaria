@@ -196,6 +196,7 @@ public class UploadActivity extends RoboActivity {
 		if(imageFileUri == null) {
 			Toast invalidFile = Toast.makeText(getApplicationContext(), "Невалидна снимка", 3);
 			invalidFile.show();
+			return false;
 		}
 		return true;
 	}

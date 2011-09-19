@@ -9,6 +9,8 @@ import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.ParseException;
@@ -16,6 +18,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.params.ClientPNames;
@@ -27,6 +30,7 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
@@ -34,8 +38,7 @@ import org.apache.http.util.EntityUtils;
 
 public class Connection {
 
-	private final String loginRedirectUri = "/map/index.php";
-	private final String markSuccess = "/map/thankyou.php";
+	
 	private HttpClient client;
 	private HttpContext context;
 	private int statusCode;
@@ -46,12 +49,13 @@ public class Connection {
 		client = new DefaultHttpClient();
 		context = new BasicHttpContext();
 		client.getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
+		client.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS, false);
 	}
 
 	public void login(final String email, final String password) throws InvalidDataException, ConnectionException {
 		
 		HttpResponse loginResponse;
-		
+		String pageSource = null;
 		try {
 			loginResponse = doLoginPost(email, password);
 		} catch (Exception e) {
@@ -59,7 +63,7 @@ public class Connection {
 		}
 		
 		try {
-			String pageSource = EntityUtils.toString(loginResponse.getEntity());
+			pageSource = EntityUtils.toString(loginResponse.getEntity());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -67,14 +71,18 @@ public class Connection {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		HttpUriRequest currentRequest = (HttpUriRequest) context.getAttribute(ExecutionContext.HTTP_REQUEST);
+		Header redirectHeader = loginResponse.getFirstHeader("Location");
 		
-		if(!currentRequest.getURI().toString().equals(loginRedirectUri)) {
+		if(redirectHeader == null) {
 			throw new InvalidDataException();
 		}
 		
-		int connectionStatus = loginResponse.getStatusLine().getStatusCode();
+		if(!redirectHeader.getValue().equals("index.php")) {
+			throw new InvalidDataException();
+		}
 		
+		
+		int connectionStatus = loginResponse.getStatusLine().getStatusCode();
 		statusCode = connectionStatus;
 		loggedIn = true;
 	}
@@ -89,7 +97,7 @@ public class Connection {
 		HttpPost post = new HttpPost("http://ng.btv.bg/map/login.php");
 		post.setEntity(entity);
 
-		return client.execute(post, context);
+		return client.execute(post);
 
 	}
 
@@ -107,14 +115,17 @@ public class Connection {
 		}
 		HttpResponse response = doMarkPost(data);
 		
-		int connectionStatus = response.getStatusLine().getStatusCode();
+		Header redirectHeader = response.getFirstHeader("Location");
 		
-		HttpUriRequest currentRequest = (HttpUriRequest) context.getAttribute(ExecutionContext.HTTP_REQUEST);
-		
-		EntityUtils.toString(response.getEntity());
-		if(!currentRequest.getURI().toString().equals(markSuccess)) {
+		if(redirectHeader == null) {
 			throw new InvalidDataException();
 		}
+		
+		if(!redirectHeader.getValue().equals("thankyou.php")) {
+			throw new InvalidDataException();
+		}
+		int connectionStatus = response.getStatusLine().getStatusCode();
+		
 		this.statusCode = connectionStatus;
 	}
 	
@@ -122,8 +133,7 @@ public class Connection {
 		MultipartEntity entity = setUpMarkParameters(data);
 		HttpPost markPost = new HttpPost("http://ng.btv.bg/map/add_waste_info.php");
 		markPost.setEntity(entity);
-		return client.execute(markPost, context);
-		
+		return client.execute(markPost);
 	}
 	
 	private MultipartEntity setUpMarkParameters(final MarkRequestData data) throws UnsupportedEncodingException {

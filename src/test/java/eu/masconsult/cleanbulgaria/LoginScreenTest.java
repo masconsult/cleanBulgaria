@@ -1,15 +1,18 @@
 package eu.masconsult.cleanbulgaria;
 
+import java.io.UnsupportedEncodingException;
 import junit.framework.Assert;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.apache.http.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
+import com.xtremelabs.robolectric.shadows.ShadowActivity;
 import com.xtremelabs.robolectric.shadows.ShadowHandler;
 import com.xtremelabs.robolectric.shadows.ShadowToast;
 
@@ -36,10 +39,25 @@ public class LoginScreenTest {
 	}
 
 	@Test
-	public void testEmptyDataToast() {
+	public void testEmptyData() {
 		ShadowHandler.idleMainLooper(); 
 		logInButton.performClick();
 		Assert.assertEquals(ShadowToast.getTextOfLatestToast(), "Попълнете Полетата"); 
 	}
+	
+	@Test
+	public void testInvalidData() throws UnsupportedEncodingException {
+		RobolectricHelper.createPendingHttpResponse().withStatus(HttpStatus.SC_OK).withHeader("Location", "login.php").add();
+		
+		ShadowHandler.idleMainLooper(); 
+		emailText.setText("invalid@invalid.com");
+		passwordText.setText("password");
+		
+		logInButton.performClick();
+		
+		Assert.assertEquals(ShadowToast.getTextOfLatestToast(), "Невалиден Е-Мейл или парола"); 
+	}
+	
+	
 
 }
