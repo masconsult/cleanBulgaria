@@ -72,14 +72,16 @@ public class UploadActivity extends RoboActivity {
 			if(!isDataValid()) {
 				return;
 			}
+			String addr = null;
+			Location loc = positionManager.getPosition();
 			MarkRequestData markData = setUpMarkData();
+			
 			try {
 				connection.mark(markData);
 			} catch (InvalidDataException e) {
 				Toast toast = Toast.makeText(getApplicationContext(), "Невалидни данни", 3);
 				toast.show();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -131,8 +133,9 @@ public class UploadActivity extends RoboActivity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		imageFileUri = (Uri)getIntent().getData();
-		Location loc = positionManager.getPosition();
+		
+		
+		
 	}
 
 	private void setUpMetricSpinner() {
@@ -168,12 +171,12 @@ public class UploadActivity extends RoboActivity {
 		data.wasteMetric = metric;
 		data.wasteInfo = wasteInfoTextEdit.getText().toString();
 		data.imageFile = new File(imageFileUri.toString());
-		data.address = "Пловдив, Тракия, Лаута";
-		data.lat = "42.138877";
-		data.lng = "24.774903";
+		data.address = "Улица Ангел";
+		data.lat = "";
+		data.lng = "";
 		data.submitX = "106";
 		data.submitY = "12";
-		System.out.println(imageFileUri);
+		
 		return data;
 	}
 	
@@ -198,12 +201,13 @@ public class UploadActivity extends RoboActivity {
 			invalidFile.show();
 			return false;
 		}
+		imageFileUri = (Uri)getIntent().getData();
 		return true;
 	}
 
 	@Override
 	public void onBackPressed() {
-		startActivity(new Intent(getApplicationContext(), MainActivity.class));
+		startActivity(new Intent(getApplicationContext(), TakePhotoActivity.class));
 	}
 	
 	private boolean isWasteTypeSelected() {
@@ -217,5 +221,9 @@ public class UploadActivity extends RoboActivity {
 
 	public boolean[] getWasteTypes() {
 		return selectedWasteTypes;
+	}
+	
+	protected String getMetric() {
+		return metric;
 	}
 }

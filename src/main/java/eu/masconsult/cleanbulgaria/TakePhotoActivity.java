@@ -33,6 +33,7 @@ public class TakePhotoActivity extends RoboActivity {
 
 	private void init() {
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString()); 
 		startActivityForResult(intent, CAPTURE_IMAGE_REQUEST);
 	}
 
