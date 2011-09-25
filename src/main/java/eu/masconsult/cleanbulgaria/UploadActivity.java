@@ -72,9 +72,9 @@ public class UploadActivity extends RoboActivity {
 			if(!isDataValid()) {
 				return;
 			}
-			String addr = null;
-			Location loc = positionManager.getPosition();
-			MarkRequestData markData = setUpMarkData();
+			
+			Location currentLocation = positionManager.getPosition();
+			MarkRequestData markData = setUpMarkData(currentLocation);
 			
 			try {
 				connection.mark(markData);
@@ -159,7 +159,7 @@ public class UploadActivity extends RoboActivity {
 	}
 
 	
-	private MarkRequestData setUpMarkData() {
+	private MarkRequestData setUpMarkData(Location location) {
 	
 		MarkRequestData data = new MarkRequestData();
 		for(int i = 0; i < selectedWasteTypes.length; i++) {
@@ -171,9 +171,19 @@ public class UploadActivity extends RoboActivity {
 		data.wasteMetric = metric;
 		data.wasteInfo = wasteInfoTextEdit.getText().toString();
 		data.imageFile = new File(imageFileUri.toString());
-		data.address = "Улица Ангел";
-		data.lat = "";
-		data.lng = "";
+		if(location == null) {
+			data.lat = "42.155931";
+			data.lng = "24.714543";
+			data.address = "Улица Ангел";
+		} else {
+			data.lat = String.valueOf(location.getLatitude());
+			data.lng = String.valueOf(location.getLongitude());
+			try {
+				data.address = positionManager.getAddress();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		data.submitX = "106";
 		data.submitY = "12";
 		
@@ -196,18 +206,20 @@ public class UploadActivity extends RoboActivity {
 			noQuantaty.show();
 			return false;
 		}
+		
+		imageFileUri = getIntent().getData();
 		if(imageFileUri == null) {
 			Toast invalidFile = Toast.makeText(getApplicationContext(), "Невалидна снимка", 3);
 			invalidFile.show();
 			return false;
 		}
-		imageFileUri = (Uri)getIntent().getData();
+		
 		return true;
 	}
 
 	@Override
 	public void onBackPressed() {
-		startActivity(new Intent(getApplicationContext(), TakePhotoActivity.class));
+		startActivity(new Intent(getApplicationContext(), MainActivity.class));
 	}
 	
 	private boolean isWasteTypeSelected() {

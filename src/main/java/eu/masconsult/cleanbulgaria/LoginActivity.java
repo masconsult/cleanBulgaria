@@ -37,14 +37,7 @@ public class LoginActivity extends RoboActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if(loggedIn) {
-			startActivity(new Intent(getApplicationContext(), MainActivity.class));
-		}
 		setContentView(R.layout.login_layout);
-		if(connection.isLoggedIn()) {
-			startActivity(new Intent(getApplicationContext(), MainActivity.class));
-		}
-		
 		emailTextEdit.setText("dani7@abv.bg");
 		passwordTextEdit.setText("alabala");
 		

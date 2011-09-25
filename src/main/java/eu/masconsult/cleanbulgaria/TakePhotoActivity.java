@@ -62,6 +62,11 @@ public class TakePhotoActivity extends RoboActivity {
 	}
 
 	@Override
+	public void onBackPressed() {
+		startActivity(new Intent(getApplicationContext(), MainActivity.class));
+	}
+	
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		if (requestCode == CAPTURE_IMAGE_REQUEST) {
