@@ -4,7 +4,8 @@
 	package="eu.masconsult.cleanbulgaria">
 	<uses-sdk android:minSdkVersion="8" />
 
-	<application android:label="@string/app_name" android:name=".CleanBulgariaApplication">
+	<application android:label="@string/app_name" android:name=".CleanBulgariaApplication"
+	android:debuggable="true">
 		<activity android:name=".LoginActivity" android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />

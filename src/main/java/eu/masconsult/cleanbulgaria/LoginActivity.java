@@ -44,6 +44,10 @@ public class LoginActivity extends RoboActivity {
 		if(connection.isLoggedIn()) {
 			startActivity(new Intent(getApplicationContext(), MainActivity.class));
 		}
+		
+		emailTextEdit.setText("dani7@abv.bg");
+		passwordTextEdit.setText("alabala");
+		
 		loginButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -51,7 +55,7 @@ public class LoginActivity extends RoboActivity {
 	
 				String email = emailTextEdit.getText().toString();
 				String password  = passwordTextEdit.getText().toString();
-				if(email.isEmpty() || password.isEmpty()) {
+				if(email.equals("") || password.equals("")) {
 					Toast validationToast = Toast.makeText(getApplicationContext(), "Попълнете Полетата", 2);
 					validationToast.show();
 					return;
