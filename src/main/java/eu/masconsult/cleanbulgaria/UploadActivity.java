@@ -184,8 +184,8 @@ public class UploadActivity extends RoboActivity {
 				e.printStackTrace();
 			}
 		}
-		data.submitX = "106";
-		data.submitY = "12";
+		data.submitX = "0";
+		data.submitY = "0";
 		
 		return data;
 	}
