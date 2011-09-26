@@ -2,6 +2,8 @@ package eu.masconsult.cleanbulgaria;
 
 
 
+import java.io.IOException;
+
 import com.google.inject.Inject;
 
 import eu.masconsult.cleanbulgaria.connection.Connection;
@@ -10,8 +12,11 @@ import eu.masconsult.cleanbulgaria.connection.InvalidDataException;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -32,7 +37,6 @@ public class LoginActivity extends RoboActivity {
 	@Inject
 	Connection connection;
 	
-	private boolean loggedIn = false;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,19 @@ public class LoginActivity extends RoboActivity {
 		setContentView(R.layout.login_layout);
 		emailTextEdit.setText("dani7@abv.bg");
 		passwordTextEdit.setText("alabala");
+		
+		
+		passwordTextEdit.setOnKeyListener(new OnKeyListener() {
+			
+			@Override
+			public boolean onKey(View v, int keyCode, KeyEvent event) {
+				if(event.getAction() == EditorInfo.IME_ACTION_DONE || event.getAction() == EditorInfo.IME_NULL) {
+					loginButton.performClick();
+					return true;
+				}
+				return false;
+			}
+		});
 		
 		loginButton.setOnClickListener(new OnClickListener() {
 			
@@ -60,8 +77,9 @@ public class LoginActivity extends RoboActivity {
 					Toast validationToast = Toast.makeText(getApplicationContext(), "Невалиден Е-Мейл или парола", 2);
 					validationToast.show();
 					return;
-				} catch (Exception e) {
-					e.printStackTrace();
+				} catch (ConnectionException e) {
+					Toast.makeText(getBaseContext(), "Възникна проблем при свързване", 3).show();
+					return;
 				}
 				
 			}
