@@ -30,23 +30,26 @@ import roboguice.util.RoboAsyncTask;
 public class LoginActivity extends RoboActivity {
 
     @InjectView(R.id.emailText)
-    EditText emailTextEdit;
+    private EditText emailTextEdit;
 
     @InjectView(R.id.passwordText)
-    EditText passwordTextEdit;
+    private EditText passwordTextEdit;
 
     @InjectView(R.id.loginButton)
-    Button loginButton;
+    private Button loginButton;
 
     @Inject
-    Connection connection;
+    private Connection connection;
 
-    ProgressDialog progressDialog;
+    private LoginTask loginTask;
+
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        loginTask = new LoginTask(getApplicationContext());
         setContentView(R.layout.login_layout);
         emailTextEdit.setText("dani7@abv.bg");
         passwordTextEdit.setText("alabala");
@@ -79,12 +82,11 @@ public class LoginActivity extends RoboActivity {
                     validationToast.show();
                     return;
                 }
-                progressDialog.show();
-                new LoginTask(getApplicationContext()).execute(email, password);
+                loginTask.execute(email, password);
             }
         });
     }
-
+    
     private class LoginTask extends AsyncTask<String, Void, Integer> {
 
         private Context context;
@@ -93,8 +95,14 @@ public class LoginActivity extends RoboActivity {
         private static final int INVALID_CREDENTIALS = 2;
         private static final int NO_CONNECTION = 3;
 
+        @Inject
         public LoginTask(Context context) {
             this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog.show();
         }
 
         @Override

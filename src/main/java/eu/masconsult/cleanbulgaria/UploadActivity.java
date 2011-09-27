@@ -78,7 +78,6 @@ public class UploadActivity extends RoboActivity {
             if (!isDataValid()) {
                 return;
             }
-            progressDialog.show();
             new MarkPlaceTask().execute();
         }
     }
@@ -209,6 +208,11 @@ public class UploadActivity extends RoboActivity {
         private static final int SUCCESS = 1;
         private static final int INVALID_DATA = 2;
         private static final int UNABLE_TO_CONNECT = 3;
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog.show();
+        }
 
         @Override
         protected Integer doInBackground(Void... params) {
