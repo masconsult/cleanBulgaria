@@ -8,3 +8,6 @@ target/
 .settings
 .project
 gen/
+proguard.cfg
+build.xml
+local.properties
