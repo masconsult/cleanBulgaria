@@ -85,40 +85,6 @@ public class LoginActivity extends RoboActivity {
         });
     }
 
-//    private class RoboLoginTask extends RoboAsyncTask<String> {
-//
-//        private String email;
-//        private String password;
-//
-//        public RoboLoginTask(String email, String password) {
-//            this.email = email;
-//            this.password = password;
-//        }
-//
-//        @Override
-//        public String call() throws Exception {
-//            connection.login(email, password);
-//            return "";
-//        }
-//
-//        @Override
-//        protected void onSuccess(String result) throws Exception {
-//            progressDialog.dismiss();
-//            Intent intent = new Intent(context, MainActivity.class);
-//            startActivity(intent);
-//        }
-//
-//        @Override
-//        protected void onException(Exception e) throws RuntimeException {
-//            progressDialog.dismiss();
-//            if(e.getClass().equals(InvalidDataException.class)) {
-//                Toast.makeText(context, context.getString(R.string.invalidCredentials), Toast.LENGTH_LONG).show();
-//            } else if(e.getClass().equals(ConnectionException.class)) {
-//                Toast.makeText(context, context.getString(R.string.noConnection), Toast.LENGTH_LONG).show();
-//            }
-//        }
-//    }
-
     private class LoginTask extends AsyncTask<String, Void, Integer> {
 
         private Context context;
