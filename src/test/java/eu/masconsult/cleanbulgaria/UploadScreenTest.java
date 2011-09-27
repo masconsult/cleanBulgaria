@@ -45,7 +45,7 @@ public class UploadScreenTest {
 	}
 	
 	@Test
-	public void testWasteTypeDialogAppersOnClick() {
+	public void testWasteTypeDialogAppearsOnClick() {
 		selectWasteType.performClick();
 		ShadowAlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
 		Assert.assertTrue(dialog.isShowing());

@@ -1,9 +1,12 @@
 package eu.masconsult.cleanbulgaria;
 
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -13,13 +16,16 @@ import android.view.View.OnKeyListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.google.inject.Inject;
 import eu.masconsult.cleanbulgaria.connection.Connection;
 import eu.masconsult.cleanbulgaria.connection.ConnectionException;
 import eu.masconsult.cleanbulgaria.connection.InvalidDataException;
 import roboguice.activity.RoboActivity;
+import roboguice.event.Observes;
 import roboguice.inject.InjectView;
+import roboguice.util.RoboAsyncTask;
 
 public class LoginActivity extends RoboActivity {
 
@@ -35,14 +41,19 @@ public class LoginActivity extends RoboActivity {
     @Inject
     Connection connection;
 
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
         emailTextEdit.setText("dani7@abv.bg");
         passwordTextEdit.setText("alabala");
 
+        progressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
+        progressDialog.setTitle(R.string.loginProcessTitle);
+        progressDialog.setMessage(getString(R.string.loginProcessMessage));
 
         passwordTextEdit.setOnKeyListener(new OnKeyListener() {
 
@@ -68,25 +79,56 @@ public class LoginActivity extends RoboActivity {
                     validationToast.show();
                     return;
                 }
-                Context context = getApplicationContext();
-                ProgressDialog progressDialog = ProgressDialog.show(LoginActivity.this, context.getString(R.string.loginProcessTitle), context.getString(R.string.loginProcessMessage));
-                new LoginTask(getApplicationContext(), progressDialog).execute(email, password);
+                progressDialog.show();
+                new LoginTask(getApplicationContext()).execute(email, password);
             }
         });
     }
 
+//    private class RoboLoginTask extends RoboAsyncTask<String> {
+//
+//        private String email;
+//        private String password;
+//
+//        public RoboLoginTask(String email, String password) {
+//            this.email = email;
+//            this.password = password;
+//        }
+//
+//        @Override
+//        public String call() throws Exception {
+//            connection.login(email, password);
+//            return "";
+//        }
+//
+//        @Override
+//        protected void onSuccess(String result) throws Exception {
+//            progressDialog.dismiss();
+//            Intent intent = new Intent(context, MainActivity.class);
+//            startActivity(intent);
+//        }
+//
+//        @Override
+//        protected void onException(Exception e) throws RuntimeException {
+//            progressDialog.dismiss();
+//            if(e.getClass().equals(InvalidDataException.class)) {
+//                Toast.makeText(context, context.getString(R.string.invalidCredentials), Toast.LENGTH_LONG).show();
+//            } else if(e.getClass().equals(ConnectionException.class)) {
+//                Toast.makeText(context, context.getString(R.string.noConnection), Toast.LENGTH_LONG).show();
+//            }
+//        }
+//    }
+
     private class LoginTask extends AsyncTask<String, Void, Integer> {
 
         private Context context;
-        private ProgressDialog progressDialog;
 
         private static final int LOGIN_SUCCESS = 1;
         private static final int INVALID_CREDENTIALS = 2;
         private static final int NO_CONNECTION = 3;
 
-        public LoginTask(Context context, ProgressDialog progressDialog) {
+        public LoginTask(Context context) {
             this.context = context;
-            this.progressDialog = progressDialog;
         }
 
         @Override

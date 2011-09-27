@@ -1,6 +1,10 @@
 package eu.masconsult.cleanbulgaria;
 
 import java.io.UnsupportedEncodingException;
+
+import android.content.DialogInterface;
+import android.widget.PopupWindow;
+import com.xtremelabs.robolectric.shadows.*;
 import junit.framework.Assert;
 import android.content.Intent;
 import android.widget.Button;
@@ -11,17 +15,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
-import com.xtremelabs.robolectric.shadows.ShadowActivity;
 
-import com.xtremelabs.robolectric.shadows.ShadowHandler;
-import com.xtremelabs.robolectric.shadows.ShadowToast;
 import static com.xtremelabs.robolectric.Robolectric.shadowOf;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
-
-
-import eu.masconsult.cleanbulgaria.LoginActivity;
-import eu.masconsult.cleanbulgaria.R;
 
 
 @RunWith(RobolectricTestRunner.class)
@@ -53,17 +50,13 @@ public class LoginScreenTest {
 	
 	@Test
 	public void testInvalidData() throws UnsupportedEncodingException {
-		RobolectricHelper.createPendingHttpResponse().withStatus(HttpStatus.SC_OK).withHeader("Location", "login.php").add();
-		
-		ShadowHandler.idleMainLooper(); 
-		emailText.setText("invalid@invalid.com");
-		passwordText.setText("password");
-		
-		logInButton.performClick();
-		
-	
-		
-		Assert.assertEquals(ShadowToast.getTextOfLatestToast(), "Невалиден Е-Мейл или парола"); 
+        RobolectricHelper.createPendingHttpResponse().withStatus(HttpStatus.SC_OK).withHeader("Location", "login.php").add();
+        ShadowHandler.idleMainLooper();
+        emailText.setText("invalid@invalid.com");
+        passwordText.setText("password");
+        logInButton.performClick();
+        String expected = loginActivity.getString(R.string.invalidCredentials);
+        Assert.assertEquals(ShadowToast.getTextOfLatestToast(), expected);
 	}
 	
 	@Test
@@ -73,9 +66,8 @@ public class LoginScreenTest {
 		passwordText.setText("alabala");
 		
 		logInButton.performClick();
-		
 		ShadowActivity shadowOfLoginActivity = shadowOf(loginActivity);
-		
+
 		Intent startedIntent = shadowOfLoginActivity.getNextStartedActivity();
 		
 		assertThat(startedIntent.getComponent().getClassName(), equalTo(MainActivity.class.getName()));

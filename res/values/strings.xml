@@ -10,4 +10,5 @@
     <string name="loginProcessMessage">Моля, изчакайте</string>
     <string name="invalidCredentials">Въведенети данни са невалидни</string>
     <string name="noConnection">В момента няма връзка със сървъра, опитайте по-късно</string>
+    <string name="markRequestSuccessful">Заявката Ви беше изпратена успешно</string>
 </resources>
