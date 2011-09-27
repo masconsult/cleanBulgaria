@@ -6,4 +6,8 @@
     <string name="emptyFieldsMessage">Попълнете празните полета</string>
     <string name="invalidEmaul">Въведете валиден Е-Майл</string>
     <string name="wasteMetricPrompt">Мярка</string>
+    <string name="loginProcessTitle">Свързване...</string>
+    <string name="loginProcessMessage">Моля, изчакайте</string>
+    <string name="invalidCredentials">Въведенети данни са невалидни</string>
+    <string name="noConnection">В момента няма връзка със сървъра, опитайте по-късно</string>
 </resources>
