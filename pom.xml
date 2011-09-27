@@ -86,6 +86,33 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
+	    <!-- Maven command exec plugin -->
+
+	    <plugin>
+		    <groupId>org.codehaus.mojo</groupId>
+		    <artifactId>exec-maven-plugin</artifactId>
+		    <version>1.2.1</version>
+		    <executions>
+			    <execution>
+				    <goals>
+					    <goal>exec</goal>
+				    </goals>
+			    </execution>
+		    </executions>
+		    <configuration>
+			    <executable>android</executable>
+			    <arguments>
+				    <argument>update</argument>
+				    <argument>project</argument>
+				    <argument>-p</argument>
+				    <argument>.</argument>
+			    </arguments> 
+		    </configuration>
+	    </plugin>
+
+				   
+
+
             <plugin>
                 <!-- See http://code.google.com/p/maven-android-plugin/ -->
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
