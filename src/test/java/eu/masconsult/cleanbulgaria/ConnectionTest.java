@@ -1,6 +1,6 @@
 package eu.masconsult.cleanbulgaria;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,13 +15,13 @@ import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 import eu.masconsult.cleanbulgaria.connection.Connection;
 import eu.masconsult.cleanbulgaria.connection.ConnectionException;
 import eu.masconsult.cleanbulgaria.connection.InvalidDataException;
 import eu.masconsult.cleanbulgaria.connection.MarkRequestData;
+import eu.masconsult.cleanbulgaria.connection.UserNotLoggedInException;
 
 @RunWith(RobolectricTestRunner.class)
 public class ConnectionTest {
@@ -30,9 +30,9 @@ public class ConnectionTest {
 
 	@Test(expected = InvalidDataException.class)
 	public void testInvalidLoginData() throws ParseException,
-			IOException, ConnectionException, InvalidDataException {
+	IOException, ConnectionException, InvalidDataException {
 
-		
+
 		RobolectricHelper.createPendingHttpResponse().withStatus(HttpStatus.SC_OK).withHeader("Location", "login.php").add();
 
 		connection.login("alabala", "alabala");
@@ -41,7 +41,7 @@ public class ConnectionTest {
 
 	@Test
 	public void testConnectionLoginOK() throws InvalidDataException,
-			ConnectionException, IOException {
+	ConnectionException, IOException {
 
 		RobolectricHelper.createPendingHttpResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "index.php").add();
 
@@ -52,14 +52,14 @@ public class ConnectionTest {
 
 	@Test
 	public void testConnectionMark() throws ClientProtocolException,
-			IOException, InvalidDataException, ConnectionException {
+	IOException, InvalidDataException, ConnectionException, UserNotLoggedInException {
 
 		RobolectricHelper.createPendingHttpResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "index.php").add();
-		
 		connection.login("dani7@abv.bg", "alabala");
 
+		RobolectricHelper.createPendingHttpResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).add();
 		RobolectricHelper.createPendingHttpResponse().withStatus(HttpStatus.SC_MOVED_TEMPORARILY).withHeader("Location", "thankyou.php").add();
-		
+
 		MarkRequestData data = new MarkRequestData();
 		data.address = "ул. Ангел";
 		data.imageFile = new File("dfsdfsd");
@@ -75,6 +75,7 @@ public class ConnectionTest {
 		data.submitY = "12";
 
 		connection.mark(data);
+
 
 		int status = connection.getConnectionStatusCode();
 		Assert.assertEquals(HttpStatus.SC_MOVED_TEMPORARILY, status);

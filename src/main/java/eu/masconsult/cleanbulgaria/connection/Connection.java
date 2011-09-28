@@ -13,6 +13,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.entity.mime.HttpMultipartMode;
@@ -21,22 +22,17 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 
 public class Connection {
 
-
-
 	private HttpClient client;
-	private HttpContext context;
 	private int statusCode;
 	private Charset utfSet = Charset.forName("UTF-8");
-	private boolean loggedIn = false;
+	//	private boolean loggedIn = true;
 
 	public Connection() {
 		client = new DefaultHttpClient();
-		context = new BasicHttpContext();
 		client.getParams().setParameter(ClientPNames.ALLOW_CIRCULAR_REDIRECTS, true);
 		client.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS, false);
 	}
@@ -63,7 +59,7 @@ public class Connection {
 
 		int connectionStatus = loginResponse.getStatusLine().getStatusCode();
 		statusCode = connectionStatus;
-		loggedIn = true;
+		//		loggedIn = true;
 	}
 
 	public int getConnectionStatusCode() {
@@ -88,14 +84,17 @@ public class Connection {
 		return formParameters;
 	}
 
-	public void mark(final MarkRequestData data) throws InvalidDataException, IOException {
-		if(!loggedIn) {
-			throw new ClientProtocolException();
+	public void mark(final MarkRequestData data) throws InvalidDataException, IOException, UserNotLoggedInException {
+		//		if(!loggedIn) {
+		//			throw new ClientProtocolException();
+		//		}
+		if(!isLoggedIn()) {
+			throw new UserNotLoggedInException();
 		}
+
 		HttpResponse response = doMarkPost(data);
 
 		Header redirectHeader = response.getFirstHeader("Location");
-
 		if(redirectHeader == null) {
 			throw new InvalidDataException();
 		}
@@ -117,7 +116,6 @@ public class Connection {
 
 	private MultipartEntity setUpMarkParameters(final MarkRequestData data) throws UnsupportedEncodingException {
 		MultipartEntity entity = new MultipartEntity( HttpMultipartMode.BROWSER_COMPATIBLE );
-
 		entity.addPart( "file[]", new FileBody(data.imageFile, "image/jpg"));
 		entity.addPart("address", new StringBody(data.address, "text/plain", utfSet));
 		entity.addPart("lat", new StringBody(data.lat, utfSet));
@@ -131,12 +129,21 @@ public class Connection {
 		entity.addPart("submit.x", new StringBody(data.submitX, utfSet));
 		entity.addPart("submit.y", new StringBody(data.submitY, utfSet));
 		entity.addPart("go", new StringBody("go", utfSet));
-
 		return entity;
 	}
 
-	public boolean isLoggedIn() {
-		return loggedIn;
+	public boolean isLoggedIn() throws ClientProtocolException, IOException {
+		String pageSource = getPageSource("http://ng.btv.bg/map/thankyou.php");
+		return loginLinkIsNotFoundOn(pageSource);
 	}
 
+	private String getPageSource(String pageUrl) throws IOException, ClientProtocolException {
+		HttpGet request = new HttpGet(pageUrl);
+		HttpResponse response = client.execute(request);
+		return EntityUtils.toString(response.getEntity());
+	}
+
+	private boolean loginLinkIsNotFoundOn(String pageSource) {
+		return !pageSource.contains("login.php");
+	}
 }

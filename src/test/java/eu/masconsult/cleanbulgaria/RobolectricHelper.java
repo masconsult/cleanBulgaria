@@ -14,9 +14,10 @@ public class RobolectricHelper {
 	public static RobolectricHelper createPendingHttpResponse() {
 		return new RobolectricHelper();
 	}
-	
+
 	public RobolectricHelper withStatus(int status)  {
 		response = new BasicHttpResponse(new ProtocolVersion("HTTP", 1, 0), status, "reason");
+
 		StringEntity entity = null;
 		try {
 			entity = new StringEntity("content", "UTF-8");
@@ -26,15 +27,15 @@ public class RobolectricHelper {
 		response.setEntity(entity);
 		return this;
 	}
-	
+
 	public RobolectricHelper withHeader(String name, String value) {
 		response.addHeader(name, value);
 		return this;
 	}
-	
+
 	public void add() {
 		Robolectric.addPendingHttpResponse(response);
 	}
-	
-	
+
+
 }
