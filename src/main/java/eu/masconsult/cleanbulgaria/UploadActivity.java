@@ -182,10 +182,6 @@ public class UploadActivity extends RoboActivity {
 		return true;
 	}
 
-	@Override
-	public void onBackPressed() {
-		startActivity(new Intent(getApplicationContext(), MainActivity.class));
-	}
 
 	private boolean isWasteTypeSelected() {
 		for (int i = 0; i < selectedWasteTypes.length; i++) {
@@ -238,6 +234,8 @@ public class UploadActivity extends RoboActivity {
 			switch (result) {
 			case SUCCESS:
 				Toast.makeText(UploadActivity.this, R.string.markRequestSuccessful, Toast.LENGTH_LONG).show();
+				UploadActivity.this.setResult(RESULT_OK);
+				UploadActivity.this.finish();
 				break;
 
 			case INVALID_DATA:

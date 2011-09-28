@@ -4,60 +4,57 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import roboguice.activity.RoboActivity;
-import roboguice.inject.InjectView;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.Toast;
-
-import com.google.inject.Inject;
-
-import eu.masconsult.cleanbulgaria.connection.Connection;
 
 public class MainActivity extends RoboActivity {
 
 	private static final int CAPTURE_IMAGE_REQUEST = 1;
+	private static final int UPLOAD_DATA_REQUEST = 2;
 
 
-	@Inject
-	Connection connection;
-	@InjectView(R.id.markPlaceButton)
-	Button markPlaceButton;
-
-	@InjectView(R.id.takePicture)
-	Button takePictureButton;
+	//	@InjectView(R.id.markPlaceButton)
+	//	Button markPlaceButton;
+	//
+	//	@InjectView(R.id.takePicture)
+	//	Button takePictureButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main_screen_layout);
+		//		setContentView(R.layout.main_screen_layout);
 
-		markPlaceButton.setOnClickListener(new OnClickListener() {
+		//		markPlaceButton.setOnClickListener(new OnClickListener() {
+		//
+		//			@Override
+		//			public void onClick(View v) {
+		//				startActivity(new Intent(getApplicationContext(), UploadActivity.class));
+		//			}
+		//		});
+		//
+		//
+		//		takePictureButton.setOnClickListener(new OnClickListener() {
+		//
+		//			@Override
+		//			public void onClick(View v) {
+		//				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		//				intent.putExtra(MediaStore.EXTRA_OUTPUT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString()); 
+		//				startActivityForResult(intent, CAPTURE_IMAGE_REQUEST);
+		//			}
+		//		});
+		startCaptureActivity();
+	}
 
-			@Override
-			public void onClick(View v) {
-				startActivity(new Intent(getApplicationContext(), UploadActivity.class));
-			}
-		});
-
-
-		takePictureButton.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				intent.putExtra(MediaStore.EXTRA_OUTPUT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString()); 
-				startActivityForResult(intent, CAPTURE_IMAGE_REQUEST);
-			}
-		});
-
+	private void startCaptureActivity() {
+		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString()); 
+		startActivityForResult(intent, CAPTURE_IMAGE_REQUEST);
 	}
 
 	@Override
@@ -67,7 +64,14 @@ public class MainActivity extends RoboActivity {
 			if (resultCode == RESULT_OK) {
 				Bitmap image = (Bitmap) data.getExtras().get("data");
 				savePicture(image);
+			} else {
+				Intent loginInten = new Intent(this, LoginActivity.class);
+				startActivity(loginInten);
 			}
+		}
+
+		if(requestCode == UPLOAD_DATA_REQUEST) {
+			startCaptureActivity();
 		}
 	}
 
@@ -94,6 +98,7 @@ public class MainActivity extends RoboActivity {
 		Uri imageUri = Uri.parse(image.getAbsolutePath());
 		Intent imageData = new Intent(getApplicationContext(), UploadActivity.class);
 		imageData.setData(imageUri);
-		startActivity(imageData);
+		startActivityForResult(imageData, UPLOAD_DATA_REQUEST);
+		//		startActivity(imageData);
 	}
 }
