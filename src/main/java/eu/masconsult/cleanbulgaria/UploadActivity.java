@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.google.inject.Inject;
 
 import eu.masconsult.cleanbulgaria.connection.Connection;
@@ -33,6 +34,8 @@ import eu.masconsult.cleanbulgaria.connection.PositionManager;
 import eu.masconsult.cleanbulgaria.connection.UserNotLoggedInException;
 
 public class UploadActivity extends RoboActivity {
+
+	private static final String ANALITICS_ID = "UA-YOUR-ACCOUNT-HERE";
 
 	@InjectView(R.id.wasteTypeSelectButton)
 	private Button wasteTypeSelectButton;
@@ -72,6 +75,7 @@ public class UploadActivity extends RoboActivity {
 	};
 	private ProgressDialog progressDialog;
 
+	GoogleAnalyticsTracker tracker;
 
 	private final class UploadDataButtonListener implements OnClickListener {
 		@Override
@@ -116,6 +120,9 @@ public class UploadActivity extends RoboActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		tracker = GoogleAnalyticsTracker.getInstance();
+		tracker.startNewSession(ANALITICS_ID, this);
+
 		setContentView(R.layout.upload_screen_layout);
 
 		progressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
@@ -233,6 +240,9 @@ public class UploadActivity extends RoboActivity {
 			progressDialog.dismiss();
 			switch (result) {
 			case SUCCESS:
+
+
+				tracker.trackEvent("Clicks", "MarkButton", "clicked", SUCCESS);
 				Toast.makeText(UploadActivity.this, R.string.markRequestSuccessful, Toast.LENGTH_LONG).show();
 				UploadActivity.this.setResult(RESULT_OK);
 				UploadActivity.this.finish();
@@ -286,5 +296,11 @@ public class UploadActivity extends RoboActivity {
 
 			return data;
 		}
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		tracker.stopSession();
 	}
 }
