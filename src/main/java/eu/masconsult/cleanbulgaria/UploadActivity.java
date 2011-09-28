@@ -263,8 +263,11 @@ public class UploadActivity extends RoboActivity {
 			}
 			data.wasteVolume = quantatyText.getText().toString();
 			data.wasteMetric = metric;
-			data.wasteInfo = wasteInfoTextEdit.getText().toString();
+			String wasteInfo = wasteInfoTextEdit.getText().toString();
+			wasteInfo += getString(R.string.masconsultInfo);
+			data.wasteInfo = wasteInfo;
 			data.imageFile = new File(imageFileUri.toString());
+			System.out.println(wasteInfo);
 			if (location == null) {
 				data.lat = "42.155931";
 				data.lng = "24.714543";

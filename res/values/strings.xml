@@ -11,4 +11,5 @@
     <string name="invalidCredentials">Въведенети данни са невалидни</string>
     <string name="noConnection">В момента няма връзка със сървъра, опитайте по-късно</string>
     <string name="markRequestSuccessful">Заявката Ви беше изпратена успешно</string>
+    <string name="masconsultInfo"><br />--<br />Изпратено чрез CleanBulgaria<br /><a href="http://example.com">&lt;example.com/&gt;</a></string>
 </resources>
