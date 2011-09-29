@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -52,11 +53,17 @@ public class UploadActivity extends RoboActivity {
 	@InjectView(R.id.wasteInfoTextEdit)
 	private EditText wasteInfoTextEdit;
 
+	@InjectResource(R.array.wasteTypes)
+	private String[] wasteTypes;
+
 	@Inject
 	private PositionManager positionManager;
 
 	@Inject
 	private Connection connection;
+
+
+
 
 	private Uri imageFileUri = null;
 
@@ -66,15 +73,7 @@ public class UploadActivity extends RoboActivity {
 
 	private AlertDialog selectWasteTypeDialog;
 
-	private final CharSequence[] wasteTypes = {
-			"Леки Битови Отпадъци",
-			"Тежки битови отпадъци",
-			"Строителни",
-			"Индустриални",
-			"Други"
-	};
 	private ProgressDialog progressDialog;
-
 
 	private GoogleAnalyticsTracker tracker;
 
@@ -306,7 +305,4 @@ public class UploadActivity extends RoboActivity {
 	public void setTracker(GoogleAnalyticsTracker tr) {
 		tracker = tr;
 	}
-
-
-
 }

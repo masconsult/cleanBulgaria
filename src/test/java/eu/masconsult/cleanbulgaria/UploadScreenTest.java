@@ -68,6 +68,7 @@ public class UploadScreenTest {
 		dialog.clickOnItem(0);
 		dialog.clickOnItem(2);
 
+
 		boolean[] actual = uploadActivity.getWasteTypes();
 
 		boolean[] expected = new boolean[5];
