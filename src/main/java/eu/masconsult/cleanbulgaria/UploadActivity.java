@@ -241,7 +241,6 @@ public class UploadActivity extends RoboActivity {
 			switch (result) {
 			case SUCCESS:
 
-
 				tracker.trackEvent("Clicks", "MarkButton", "clicked", SUCCESS);
 				Toast.makeText(UploadActivity.this, R.string.markRequestSuccessful, Toast.LENGTH_LONG).show();
 				UploadActivity.this.setResult(RESULT_OK);
@@ -277,7 +276,6 @@ public class UploadActivity extends RoboActivity {
 			wasteInfo += getString(R.string.masconsultInfo);
 			data.wasteInfo = wasteInfo;
 			data.imageFile = new File(imageFileUri.toString());
-			System.out.println(wasteInfo);
 			if (location == null) {
 				data.lat = "42.155931";
 				data.lng = "24.714543";
