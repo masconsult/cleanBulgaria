@@ -2,47 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="match_parent"
 	android:layout_height="match_parent" android:weightSum="1">
-	
-	<RelativeLayout 
-		style="@style/FieldLayout"	
-		android:layout_marginTop="85dp"
-		android:id="@+id/emailFields">
-		<TextView
-			style="@style/LoginLabel" 
-			android:id="@+id/emailLabel"
+
+	<RelativeLayout style="@style/FieldLayout"
+		android:layout_marginTop="85dp" android:id="@+id/emailFields">
+		<TextView style="@style/LoginLabel" android:id="@+id/emailLabel"
 			android:text="@string/emailLabelText">
-			</TextView>
-		<EditText
-			style="@style/LoginTextField"
-			android:id="@+id/emailText" 
+		</TextView>
+		<EditText style="@style/LoginTextField" android:id="@+id/emailText"
 			android:layout_toRightOf="@+id/emailLabel">
 		</EditText>
 	</RelativeLayout>
-	<RelativeLayout 
-		style="@style/FieldLayout">
-		<TextView
-			style="@style/LoginLabel" 
-			android:id="@+id/passwordLabel"
+	<RelativeLayout style="@style/FieldLayout">
+		<TextView style="@style/LoginLabel" android:id="@+id/passwordLabel"
 			android:text="@string/passwordLabelText">
 		</TextView>
-		
-		<EditText
-			style="@style/LoginTextField" 
-			android:inputType="textPassword"
-			android:layout_toRightOf="@+id/passwordLabel"
-			android:id="@+id/passwordText">
+
+		<EditText style="@style/LoginTextField" android:inputType="textPassword"
+			android:layout_toRightOf="@+id/passwordLabel" android:id="@+id/passwordText">
 		</EditText>
 	</RelativeLayout>
-	
+
 	<RelativeLayout android:layout_height="wrap_content"
-		android:id="@+id/buttonLayout" 
-		android:layout_width="match_parent">
+		android:id="@+id/buttonLayout" android:layout_width="match_parent">
 		<Button android:layout_height="wrap_content"
-			android:layout_alignParentTop="true" 
-			android:layout_centerHorizontal="true"
-			android:id="@+id/loginButton" 
-			android:text="@string/loginButtonText"
+			android:layout_alignParentTop="true" android:layout_centerHorizontal="true"
+			android:id="@+id/loginButton" android:text="@string/loginButtonText"
 			android:layout_width="70dp"></Button>
+	</RelativeLayout>
+	<RelativeLayout android:layout_height="wrap_content"
+		android:layout_width="match_parent" android:id="@+id/registerReminder">
+		<TextView android:layout_height="wrap_content"
+			android:layout_width="wrap_content" 
+			android:text="@string/registerNotification"
+			android:id="@+id/registerReminderText"
+			android:gravity="center"
+			android:autoLink="all"
+			></TextView>
 	</RelativeLayout>
 
 </LinearLayout>

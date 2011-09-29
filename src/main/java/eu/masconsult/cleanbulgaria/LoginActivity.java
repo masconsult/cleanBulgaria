@@ -34,8 +34,10 @@ public class LoginActivity extends RoboActivity {
 	@InjectView(R.id.loginButton)
 	private Button loginButton;
 
+
 	@Inject
 	private Connection connection;
+
 
 	private LoginTask loginTask;
 
@@ -46,6 +48,7 @@ public class LoginActivity extends RoboActivity {
 
 		super.onCreate(savedInstanceState);
 		loginTask = new LoginTask(getApplicationContext());
+
 		setContentView(R.layout.login_layout);
 		emailTextEdit.setText("dani7@abv.bg");
 		passwordTextEdit.setText("alabala");
