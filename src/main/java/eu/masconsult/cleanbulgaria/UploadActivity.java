@@ -75,7 +75,8 @@ public class UploadActivity extends RoboActivity {
 	};
 	private ProgressDialog progressDialog;
 
-	GoogleAnalyticsTracker tracker;
+
+	private GoogleAnalyticsTracker tracker;
 
 	private final class UploadDataButtonListener implements OnClickListener {
 		@Override
@@ -120,7 +121,6 @@ public class UploadActivity extends RoboActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		tracker = GoogleAnalyticsTracker.getInstance();
 		tracker.startNewSession(ANALITICS_ID, this);
 
 		setContentView(R.layout.upload_screen_layout);
@@ -303,4 +303,12 @@ public class UploadActivity extends RoboActivity {
 		super.onDestroy();
 		tracker.stopSession();
 	}
+
+	@Inject
+	public void setTracker(GoogleAnalyticsTracker tr) {
+		tracker = tr;
+	}
+
+
+
 }

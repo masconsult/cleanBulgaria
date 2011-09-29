@@ -2,15 +2,22 @@ package eu.masconsult.cleanbulgaria;
 
 import java.util.List;
 
+import roboguice.application.RoboApplication;
+
 import com.google.inject.Module;
 
 import eu.masconsult.cleanbulgaria.guice.CleanBulgariaConfigurationModule;
 
-import roboguice.application.RoboApplication;
-
 public class CleanBulgariaApplication extends RoboApplication {
 
-	 protected void addApplicationModules(List<Module> modules) {
-		 modules.add(new CleanBulgariaConfigurationModule());
-	 }
+	Module module = new CleanBulgariaConfigurationModule();
+
+	@Override
+	protected void addApplicationModules(List<Module> modules) {
+		modules.add(module);
+	}
+
+	public void setModule(Module module) {
+		this.module = module;
+	}
 }
