@@ -12,16 +12,16 @@
 	<EditText android:layout_width="wrap_content"
 		android:inputType="number" android:layout_height="wrap_content"
 		android:layout_below="@+id/textView1" android:layout_alignParentLeft="true"
-		android:layout_toLeftOf="@+id/metricTypeSpinner" android:id="@+id/quantatyText">
+		android:layout_toLeftOf="@+id/metricTypeSpinner" android:id="@+id/quantityText">
 		<requestFocus></requestFocus>
 	</EditText>
 	<Spinner android:layout_height="wrap_content"
-		android:layout_alignBottom="@+id/quantatyText"
+		android:layout_alignBottom="@+id/quantityText"
 		android:layout_alignParentRight="true" android:id="@+id/metricTypeSpinner"
 		android:layout_width="150dp" android:prompt="@string/wasteMetricPrompt"></Spinner>
 	<TextView android:text="Допълнителна информация"
 		android:layout_height="wrap_content" android:layout_width="wrap_content"
-		android:layout_below="@+id/quantatyText"
+		android:layout_below="@+id/quantityText"
 		android:layout_alignParentLeft="true" android:id="@+id/wasteInfoLabel"></TextView>
 	<EditText android:id="@+id/wasteInfoTextEdit"
 		android:inputType="textMultiLine" android:layout_below="@+id/wasteInfoLabel"

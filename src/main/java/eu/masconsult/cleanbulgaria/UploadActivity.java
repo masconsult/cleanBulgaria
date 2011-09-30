@@ -1,11 +1,5 @@
 package eu.masconsult.cleanbulgaria;
 
-import java.io.File;
-import java.io.IOException;
-
-import roboguice.activity.RoboActivity;
-import roboguice.inject.InjectResource;
-import roboguice.inject.InjectView;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.ProgressDialog;
@@ -17,292 +11,311 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Toast;
-
+import android.widget.*;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.google.inject.Inject;
+import eu.masconsult.cleanbulgaria.connection.*;
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectResource;
+import roboguice.inject.InjectView;
 
-import eu.masconsult.cleanbulgaria.connection.Connection;
-import eu.masconsult.cleanbulgaria.connection.InvalidDataException;
-import eu.masconsult.cleanbulgaria.connection.MarkRequestData;
-import eu.masconsult.cleanbulgaria.connection.PositionException;
-import eu.masconsult.cleanbulgaria.connection.PositionManager;
-import eu.masconsult.cleanbulgaria.connection.UserNotLoggedInException;
+import java.io.File;
+import java.io.IOException;
 
 public class UploadActivity extends RoboActivity {
 
-	private static final String ANALITICS_ID = "UA-YOUR-ACCOUNT-HERE";
+  private static final String ANALITICS_ID = "UA-YOUR-ACCOUNT-HERE";
 
-	@InjectView(R.id.wasteTypeSelectButton)
-	private Button wasteTypeSelectButton;
+  @InjectView(R.id.wasteTypeSelectButton)
+  private Button wasteTypeSelectButton;
 
-	@InjectView(R.id.metricTypeSpinner)
-	private Spinner metricTypeSpinner;
+  @InjectView(R.id.metricTypeSpinner)
+  private Spinner metricTypeSpinner;
 
-	@InjectView(R.id.quantatyText)
-	private EditText quantatyText;
+  @InjectView(R.id.quantityText)
+  private EditText quantityText;
 
-	@InjectView(R.id.uploadDataButton)
-	private Button uploadDataButton;
+  @InjectView(R.id.uploadDataButton)
+  private Button uploadDataButton;
 
-	@InjectView(R.id.wasteInfoTextEdit)
-	private EditText wasteInfoTextEdit;
+  @InjectView(R.id.wasteInfoTextEdit)
+  private EditText wasteInfoTextEdit;
 
-	@InjectResource(R.array.wasteTypes)
-	private String[] wasteTypes;
+  @InjectResource(R.array.wasteTypes)
+  private String[] wasteTypes;
 
-	@Inject
-	private PositionManager positionManager;
+  @Inject
+  private PositionManager positionManager;
 
-	@Inject
-	private Connection connection;
+  @Inject
+  private Connection connection;
 
+  private Uri imageFileUri = null;
 
+  private boolean[] selectedWasteTypes = new boolean[5];
 
+  private String metric = "1";
 
-	private Uri imageFileUri = null;
+  private AlertDialog selectWasteTypeDialog;
 
-	private boolean[] selectedWasteTypes = new boolean[5];
+  private ProgressDialog progressDialog;
 
-	private String metric;
+  private GoogleAnalyticsTracker tracker;
+  private String quantity;
+  private String wasteInfo;
 
-	private AlertDialog selectWasteTypeDialog;
+  private final class UploadDataButtonListener implements OnClickListener {
 
-	private ProgressDialog progressDialog;
+    @Override
+    public void onClick(View v) {
+      if (!isDataValid()) {
+        return;
+      }
+      new MarkPlaceTask().execute();
+    }
+  }
 
-	private GoogleAnalyticsTracker tracker;
+  private final class OnMetricTypeSelectedListener implements
+          AdapterView.OnItemSelectedListener {
 
-	private final class UploadDataButtonListener implements OnClickListener {
-		@Override
-		public void onClick(View v) {
-			if (!isDataValid()) {
-				return;
-			}
-			new MarkPlaceTask().execute();
-		}
-	}
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view,
+                               int position, long id) {
+      metric = Integer.toString(++position);
+    }
 
-	private final class OnMetricTypeSelectedListener implements
-	AdapterView.OnItemSelectedListener {
-		@Override
-		public void onItemSelected(AdapterView<?> parent, View view,
-				int position, long id) {
-			metric = Integer.toString(++position);
-		}
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+      // TODO Auto-generated method stub
 
-		@Override
-		public void onNothingSelected(AdapterView<?> parent) {
-			// TODO Auto-generated method stub
+    }
 
-		}
-	}
+  }
 
-	private final class WasteTypeButtonListener implements OnClickListener {
-		private final Builder dialogBuilder;
+  private final class WasteTypeButtonListener implements OnClickListener {
 
-		private WasteTypeButtonListener(Builder dialogBuilder) {
-			this.dialogBuilder = dialogBuilder;
-		}
+    private final Builder dialogBuilder;
 
-		@Override
-		public void onClick(View v) {
-			selectWasteTypeDialog = dialogBuilder.create();
-			selectWasteTypeDialog.show();
-		}
-	}
+    private WasteTypeButtonListener(Builder dialogBuilder) {
+      this.dialogBuilder = dialogBuilder;
+    }
 
+    @Override
+    public void onClick(View v) {
+      selectWasteTypeDialog = dialogBuilder.create();
+      selectWasteTypeDialog.show();
+    }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		tracker.startNewSession(ANALITICS_ID, this);
+  }
 
-		setContentView(R.layout.upload_screen_layout);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    tracker.startNewSession(ANALITICS_ID, this);
+    setContentView(R.layout.upload_screen_layout);
+    if (savedInstanceState != null) {
+      metric = savedInstanceState.getString("metric");
+      quantity = savedInstanceState.getString("quantity");
+      wasteInfo = savedInstanceState.getString("wasteInfo");
+      selectedWasteTypes = savedInstanceState.getBooleanArray("selectedWasteTypes");
+      imageFileUri = savedInstanceState.getParcelable("imageUri");
+      quantityText.setText(quantity);
+      wasteInfoTextEdit.setText(wasteInfo);
+    }
 
-		progressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
-		progressDialog.setTitle(R.string.loginProcessTitle);
-		progressDialog.setMessage(getString(R.string.loginProcessMessage));
+    progressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
+    progressDialog.setTitle(R.string.loginProcessTitle);
+    progressDialog.setMessage(getString(R.string.loginProcessMessage));
 
-		final AlertDialog.Builder dialogBuilder = setUpDialogBuilder();
-		wasteTypeSelectButton.setOnClickListener(new WasteTypeButtonListener(dialogBuilder));
-		uploadDataButton.setOnClickListener(new UploadDataButtonListener());
-		setUpMetricSpinner();
-		try {
-			positionManager.initPositionManager(getApplicationContext());
-		} catch (PositionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+    final AlertDialog.Builder dialogBuilder = setUpDialogBuilder();
+    wasteTypeSelectButton.setOnClickListener(new WasteTypeButtonListener(dialogBuilder));
+    uploadDataButton.setOnClickListener(new UploadDataButtonListener());
+    setUpMetricSpinner();
+    try {
+      positionManager.initPositionManager(getApplicationContext());
+    } catch (PositionException e) {
+      e.printStackTrace();
+    }
+  }
 
-	private void setUpMetricSpinner() {
-		ArrayAdapter adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.metricTypes, android.R.layout.simple_spinner_item);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		metricTypeSpinner.setAdapter(adapter);
-		metricTypeSpinner.setOnItemSelectedListener(new OnMetricTypeSelectedListener());
-	}
+  @Override
+  protected void onSaveInstanceState(Bundle savedState) {
+    super.onSaveInstanceState(savedState);
+    savedState.putParcelable("imageUri", imageFileUri);
 
-	private AlertDialog.Builder setUpDialogBuilder() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Тип на отпадъците");
-		builder.setMultiChoiceItems(wasteTypes, selectedWasteTypes, new DialogInterface.OnMultiChoiceClickListener() {
+    savedState.putString("metric", metric);
+    savedState.putString("quantity", quantity);
+    savedState.putString("wasteInfo", wasteInfo);
+    savedState.putBooleanArray("selectedWasteTypes", selectedWasteTypes);
 
-			@Override
-			public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-				selectedWasteTypes[which] = isChecked;
-			}
-		});
-		return builder;
-	}
+  }
 
+  private void setUpMetricSpinner() {
+    ArrayAdapter adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.metricTypes, android.R.layout.simple_spinner_item);
+    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+    metricTypeSpinner.setAdapter(adapter);
+    metricTypeSpinner.setSelection(Integer.parseInt(metric) - 1);
+    metricTypeSpinner.setOnItemSelectedListener(new OnMetricTypeSelectedListener());
+  }
 
-	private boolean isDataValid() {
-		if (!isWasteTypeSelected()) {
-			Toast noSelectedWasteTypes = Toast.makeText(getApplicationContext(), "Моля изберете тип на боклука", Toast.LENGTH_LONG);
-			noSelectedWasteTypes.show();
-			return false;
-		}
-		if (metric.isEmpty()) {
-			Toast noSelectedMetric = Toast.makeText(getApplicationContext(), "Моля изберете мярка", Toast.LENGTH_LONG);
-			noSelectedMetric.show();
-			return false;
-		}
-		if (quantatyText.getText().toString().isEmpty()) {
-			Toast noQuantaty = Toast.makeText(getApplicationContext(), "Моля въведете количество", Toast.LENGTH_LONG);
-			noQuantaty.show();
-			return false;
-		}
+  private AlertDialog.Builder setUpDialogBuilder() {
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setTitle("Тип на отпадъците");
+    builder.setMultiChoiceItems(wasteTypes, selectedWasteTypes, new DialogInterface.OnMultiChoiceClickListener() {
 
-		imageFileUri = getIntent().getData();
-		if (imageFileUri == null) {
-			Toast invalidFile = Toast.makeText(getApplicationContext(), "Невалидна снимка", Toast.LENGTH_LONG);
-			invalidFile.show();
-			return false;
-		}
-
-		return true;
-	}
+      @Override
+      public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+        selectedWasteTypes[which] = isChecked;
+      }
+    });
+    return builder;
+  }
 
 
-	private boolean isWasteTypeSelected() {
-		for (int i = 0; i < selectedWasteTypes.length; i++) {
-			if (selectedWasteTypes[i] == true) {
-				return true;
-			}
-		}
-		return false;
-	}
+  private boolean isDataValid() {
+    if (!isWasteTypeSelected()) {
+      Toast noSelectedWasteTypes = Toast.makeText(getApplicationContext(), "Моля изберете тип на боклука", Toast.LENGTH_LONG);
+      noSelectedWasteTypes.show();
+      return false;
+    }
+    if (metric.isEmpty()) {
+      Toast noSelectedMetric = Toast.makeText(getApplicationContext(), "Моля изберете мярка", Toast.LENGTH_LONG);
+      noSelectedMetric.show();
+      return false;
+    }
+    if (quantityText.getText().toString().isEmpty()) {
+      Toast noQuantity = Toast.makeText(getApplicationContext(), "Моля въведете количество", Toast.LENGTH_LONG);
+      noQuantity.show();
+      return false;
+    }
 
-	public boolean[] getWasteTypes() {
-		return selectedWasteTypes;
-	}
+    if (imageFileUri != null)
+      imageFileUri = getIntent().getData();
+    if (imageFileUri == null) {
+      Toast invalidFile = Toast.makeText(getApplicationContext(), "Невалидна снимка", Toast.LENGTH_LONG);
+      invalidFile.show();
+      return false;
+    }
 
-	protected String getMetric() {
-		return metric;
-	}
+    return true;
+  }
 
-	private class MarkPlaceTask extends AsyncTask<Void, Void, Integer> {
 
-		private static final int SUCCESS = 1;
-		private static final int INVALID_DATA = 2;
-		private static final int UNABLE_TO_CONNECT = 3;
-		private static final int USER_NOT_LOGGED_IN = 4;
+  private boolean isWasteTypeSelected() {
+    for (int i = 0; i < selectedWasteTypes.length; i++) {
+      if (selectedWasteTypes[i] == true) {
+        return true;
+      }
+    }
+    return false;
+  }
 
-		@Override
-		protected void onPreExecute() {
-			progressDialog.show();
-		}
+  public boolean[] getWasteTypes() {
+    return selectedWasteTypes;
+  }
 
-		@Override
-		protected Integer doInBackground(Void... params) {
-			Location currentLocation = positionManager.getPosition();
-			MarkRequestData markData = setUpMarkData(currentLocation);
-			try {
-				connection.mark(markData);
-				return SUCCESS;
-			} catch (InvalidDataException e) {
-				return INVALID_DATA;
-			} catch (IOException e) {
-				return UNABLE_TO_CONNECT;
-			} catch (UserNotLoggedInException e) {
-				return USER_NOT_LOGGED_IN;
-			}
-		}
+  protected String getMetric() {
+    return metric;
+  }
 
-		@Override
-		protected void onPostExecute(Integer result) {
-			progressDialog.dismiss();
-			switch (result) {
-			case SUCCESS:
+  private class MarkPlaceTask extends AsyncTask<Void, Void, Integer> {
 
-				tracker.trackEvent("Clicks", "MarkButton", "clicked", SUCCESS);
-				Toast.makeText(UploadActivity.this, R.string.markRequestSuccessful, Toast.LENGTH_LONG).show();
-				UploadActivity.this.setResult(RESULT_OK);
-				UploadActivity.this.finish();
-				break;
+    private static final int SUCCESS = 1;
+    private static final int INVALID_DATA = 2;
+    private static final int UNABLE_TO_CONNECT = 3;
+    private static final int USER_NOT_LOGGED_IN = 4;
 
-			case INVALID_DATA:
-				Toast.makeText(UploadActivity.this, R.string.invalidCredentials, Toast.LENGTH_LONG).show();
-				break;
+    @Override
+    protected void onPreExecute() {
+      progressDialog.show();
+    }
 
-			case UNABLE_TO_CONNECT:
-				Toast.makeText(UploadActivity.this, R.string.noConnection, Toast.LENGTH_LONG).show();
-				break;
+    @Override
+    protected Integer doInBackground(Void... params) {
+      Location currentLocation = positionManager.getPosition();
+      MarkRequestData markData = setUpMarkData(currentLocation);
+      try {
+        connection.mark(markData);
+        return SUCCESS;
+      } catch (InvalidDataException e) {
+        return INVALID_DATA;
+      } catch (IOException e) {
+        return UNABLE_TO_CONNECT;
+      } catch (UserNotLoggedInException e) {
+        return USER_NOT_LOGGED_IN;
+      }
+    }
 
-			case USER_NOT_LOGGED_IN:
-				Intent intent = new Intent(UploadActivity.this, LoginActivity.class);
-				startActivity(intent);
-				break;
-			}
-		}
+    @Override
+    protected void onPostExecute(Integer result) {
+      progressDialog.dismiss();
+      switch (result) {
+        case SUCCESS:
 
-		private MarkRequestData setUpMarkData(Location location) {
+          tracker.trackEvent("Clicks", "MarkButton", "clicked", SUCCESS);
+          Toast.makeText(UploadActivity.this, R.string.markRequestSuccessful, Toast.LENGTH_LONG).show();
+          UploadActivity.this.setResult(RESULT_OK);
+          UploadActivity.this.finish();
+          break;
 
-			MarkRequestData data = new MarkRequestData();
-			for (int i = 0; i < selectedWasteTypes.length; i++) {
-				if (selectedWasteTypes[i] == true) {
-					data.wasteTypes.add(i + 1);
-				}
-			}
-			data.wasteVolume = quantatyText.getText().toString();
-			data.wasteMetric = metric;
-			String wasteInfo = wasteInfoTextEdit.getText().toString();
-			wasteInfo += getString(R.string.masconsultInfo);
-			data.wasteInfo = wasteInfo;
-			data.imageFile = new File(imageFileUri.toString());
-			if (location == null) {
-				data.lat = "42.155931";
-				data.lng = "24.714543";
-				data.address = "Улица Ангел";
-			} else {
-				data.lat = String.valueOf(location.getLatitude());
-				data.lng = String.valueOf(location.getLongitude());
-				try {
-					data.address = positionManager.getAddress();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			data.submitX = "0";
-			data.submitY = "0";
+        case INVALID_DATA:
+          Toast.makeText(UploadActivity.this, R.string.invalidCredentials, Toast.LENGTH_LONG).show();
+          break;
 
-			return data;
-		}
-	}
+        case UNABLE_TO_CONNECT:
+          Toast.makeText(UploadActivity.this, R.string.noConnection, Toast.LENGTH_LONG).show();
+          break;
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		tracker.stopSession();
-	}
+        case USER_NOT_LOGGED_IN:
+          Intent intent = new Intent(UploadActivity.this, LoginActivity.class);
+          startActivity(intent);
+          break;
+      }
+    }
 
-	@Inject
-	public void setTracker(GoogleAnalyticsTracker tr) {
-		tracker = tr;
-	}
+    private MarkRequestData setUpMarkData(Location location) {
+
+      MarkRequestData data = new MarkRequestData();
+      for (int i = 0; i < selectedWasteTypes.length; i++) {
+        if (selectedWasteTypes[i] == true) {
+          data.wasteTypes.add(i + 1);
+        }
+      }
+      quantity = quantityText.getText().toString();
+      data.wasteVolume = quantityText.getText().toString();
+      data.wasteMetric = metric;
+      wasteInfo = wasteInfoTextEdit.getText().toString();
+      data.wasteInfo = wasteInfo;
+      data.wasteInfo += getString(R.string.masconsultInfo);
+      data.imageFile = new File(imageFileUri.toString());
+      if (location == null) {
+        data.lat = "42.155931";
+        data.lng = "24.714543";
+        data.address = "Улица Ангел";
+      } else {
+        data.lat = String.valueOf(location.getLatitude());
+        data.lng = String.valueOf(location.getLongitude());
+        try {
+          data.address = positionManager.getAddress();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+      data.submitX = "0";
+      data.submitY = "0";
+
+      return data;
+    }
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    tracker.stopSession();
+  }
+
+  @Inject
+  public void setTracker(GoogleAnalyticsTracker tr) {
+    tracker = tr;
+  }
 }

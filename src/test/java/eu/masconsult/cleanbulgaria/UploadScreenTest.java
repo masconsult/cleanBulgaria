@@ -34,7 +34,7 @@ public class UploadScreenTest {
 	@InjectView(R.id.metricTypeSpinner)
 	private Spinner metricTypeSpinner;
 
-	@InjectView(R.id.quantatyText)
+	@InjectView(R.id.quantityText)
 	private EditText wasteQuantaty;
 
 	@InjectView(R.id.uploadDataButton)
