@@ -1,27 +1,22 @@
 package eu.masconsult.cleanbulgaria;
 
 
-import roboguice.activity.RoboActivity;
-import roboguice.inject.InjectView;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnKeyListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.google.inject.Inject;
-
 import eu.masconsult.cleanbulgaria.connection.Connection;
 import eu.masconsult.cleanbulgaria.connection.ConnectionException;
 import eu.masconsult.cleanbulgaria.connection.InvalidDataException;
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 
 public class LoginActivity extends RoboActivity {
 
@@ -56,18 +51,6 @@ public class LoginActivity extends RoboActivity {
 		progressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
 		progressDialog.setTitle(R.string.loginProcessTitle);
 		progressDialog.setMessage(getString(R.string.loginProcessMessage));
-
-		passwordTextEdit.setOnKeyListener(new OnKeyListener() {
-
-			@Override
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				if (event.getAction() == EditorInfo.IME_ACTION_DONE || event.getAction() == EditorInfo.IME_NULL) {
-					loginButton.performClick();
-					return true;
-				}
-				return false;
-			}
-		});
 
 		loginButton.setOnClickListener(new OnClickListener() {
 

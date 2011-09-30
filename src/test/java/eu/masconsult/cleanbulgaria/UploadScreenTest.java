@@ -3,6 +3,7 @@ package eu.masconsult.cleanbulgaria;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -17,6 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import roboguice.inject.InjectView;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 @RunWith(UploadActivityTestRunner.class)
@@ -33,7 +35,10 @@ public class UploadScreenTest {
 	private Spinner metricTypeSpinner;
 
 	@InjectView(R.id.quantityText)
-	private EditText wasteQuantaty;
+	private EditText wasteQuantity;
+
+  @InjectView(R.id.wasteInfoTextEdit)
+  private EditText wasteInfo;
 
 	@InjectView(R.id.uploadDataButton)
 	private Button markButton;
@@ -114,13 +119,60 @@ public class UploadScreenTest {
 		metricTypeSpinner.bringToFront();
 		metricTypeSpinner.setSelection(1);
 
-		wasteQuantaty.setText("3");
+		wasteQuantity.setText("3");
 
 		markButton.performClick();
 
 		Assert.assertEquals(uploadActivity.getString(R.string.markRequestSuccessful), ShadowToast.getTextOfLatestToast());
-
 	}
+
+  @Test
+  public void shouldPreserveWasteQuantityValuesWhenRotated() {
+    String expectedWasteQuantity = "22";
+    wasteQuantity.setText(expectedWasteQuantity);
+    simulateRotation();
+    assertEquals(expectedWasteQuantity, wasteQuantity.getText().toString());
+  }
+
+  @Test
+  public void shouldPreserveWasteInfoValueWhenRotated() {
+    String expectedWasteInfo = "Added info";
+    wasteInfo.setText(expectedWasteInfo);
+    simulateRotation();
+    assertEquals(expectedWasteInfo, wasteInfo.getText().toString());
+  }
+
+  @Test
+  public void shouldPreserveSelectedWasteTypes() {
+
+
+    selectWasteType.performClick();
+		ShadowAlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
+
+		dialog.clickOnItem(0);
+		dialog.clickOnItem(2);
+
+    simulateRotation();
+
+
+		boolean[] actual = dialog.getCheckedItems();
+
+		boolean[] expected = new boolean[5];
+		expected[0] = true;
+		expected[2] = true;
+
+		for(int i = 0; i < 5; i++) {
+			if(expected[i] != actual[i])
+				fail();
+		}
+
+  }
+
+  private void simulateRotation() {
+    Bundle data = new Bundle();
+    uploadActivity.onSaveInstanceState(data);
+    uploadActivity.onCreate(data);
+  }
 
 
 }
