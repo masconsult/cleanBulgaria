@@ -60,7 +60,7 @@ public class UploadScreenTest {
 	@Test 
 	public void testWasteTypeDataSelection() {
 		selectWasteType.performClick();
-		ShadowAlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();vit
+		ShadowAlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
 
 		dialog.clickOnItem(0);
 		dialog.clickOnItem(2);
