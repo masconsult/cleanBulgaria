@@ -1,25 +1,23 @@
 package eu.masconsult.cleanbulgaria;
 
 
-import static org.junit.Assert.fail;
-import junit.framework.Assert;
-
-import org.apache.http.HttpStatus;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import roboguice.inject.InjectView;
 import android.content.Intent;
 import android.net.Uri;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-
 import com.google.inject.Inject;
 import com.xtremelabs.robolectric.shadows.ShadowAlertDialog;
 import com.xtremelabs.robolectric.shadows.ShadowHandler;
 import com.xtremelabs.robolectric.shadows.ShadowToast;
+import junit.framework.Assert;
+import org.apache.http.HttpStatus;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import roboguice.inject.InjectView;
+
+import static org.junit.Assert.fail;
 
 @RunWith(UploadActivityTestRunner.class)
 public class UploadScreenTest {
@@ -45,12 +43,11 @@ public class UploadScreenTest {
 	@Before
 	public void setUp() {
 		imageUri = Uri.parse("/sdcard/cleanBulgaria/img.jpg");
-		uploadActivity.onCreate(null);
 
-		Intent intent = new Intent();
-		intent.setData(imageUri);
-		uploadActivity.setIntent(intent);
-
+    Intent intent = new Intent();
+    intent.setData(imageUri);
+    uploadActivity.setIntent(intent);
+    uploadActivity.onCreate(null);
 	}
 
 	@Test
@@ -63,7 +60,7 @@ public class UploadScreenTest {
 	@Test 
 	public void testWasteTypeDataSelection() {
 		selectWasteType.performClick();
-		ShadowAlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();
+		ShadowAlertDialog dialog = ShadowAlertDialog.getLatestAlertDialog();vit
 
 		dialog.clickOnItem(0);
 		dialog.clickOnItem(2);

@@ -121,6 +121,8 @@ public class UploadActivity extends RoboActivity {
       imageFileUri = savedInstanceState.getParcelable("imageUri");
       quantityText.setText(quantity);
       wasteInfoTextEdit.setText(wasteInfo);
+    } else {
+      imageFileUri = getIntent().getData();
     }
 
     progressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
@@ -189,8 +191,6 @@ public class UploadActivity extends RoboActivity {
       return false;
     }
 
-    if (imageFileUri != null)
-      imageFileUri = getIntent().getData();
     if (imageFileUri == null) {
       Toast invalidFile = Toast.makeText(getApplicationContext(), "Невалидна снимка", Toast.LENGTH_LONG);
       invalidFile.show();
