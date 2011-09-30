@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:orientation="vertical" android:layout_width="match_parent"
-	android:layout_height="match_parent" android:weightSum="1">
-    <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent">
-        <TextView android:text="@string/titleBar" android:layout_width="fill_parent" android:layout_height="30dp" android:gravity="center"/>
+	android:layout_height="match_parent" android:weightSum="1" android:background="@drawable/app_background">
+    <LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:background="@drawable/title_bar">
+        <TextView android:text="@string/titleBar" android:layout_width="fill_parent" android:layout_height="wrap_content" android:textSize="26sp" android:shadowColor="@android:color/black"  android:textStyle="bold" android:textColor="@android:color/white" android:gravity="center" android:layout_gravity="center"/>
     </LinearLayout>
 	<RelativeLayout style="@style/FieldLayout"
 		android:layout_marginTop="85dp" android:id="@+id/emailFields">
@@ -27,6 +27,7 @@
 	<RelativeLayout android:layout_height="wrap_content"
 		android:id="@+id/buttonLayout" android:layout_width="match_parent">
 		<Button android:layout_height="wrap_content"
+            android:background="@drawable/button_login"
 			android:layout_alignParentTop="true" android:layout_centerHorizontal="true"
 			android:id="@+id/loginButton" android:text="@string/loginButtonText"
 			android:layout_width="wrap_content"/>
