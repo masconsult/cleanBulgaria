@@ -1,42 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical" android:layout_width="match_parent"
-	android:layout_height="match_parent" android:weightSum="1"
-	android:background="@drawable/app_background">
-	<LinearLayout android:layout_height="wrap_content"
-		android:layout_width="fill_parent" android:background="@drawable/title_bar">
+              android:orientation="vertical" android:layout_width="match_parent"
+              android:layout_height="match_parent" android:weightSum="1"
+              android:background="@drawable/app_background">
+    <LinearLayout android:layout_height="wrap_content"
+                  android:layout_width="fill_parent" android:background="@drawable/title_bar">
         <TextView android:text="@string/titleBar"
                   style="@style/TitleBar"/>
-	</LinearLayout>
-	<RelativeLayout style="@style/FieldLayout"
-		android:layout_marginTop="40dp" android:id="@+id/emailFields">
-		<EditText style="@style/LoginTextField" android:id="@+id/emailText"
-			 android:hint="@string/emailLabelText">
-		</EditText>
-	</RelativeLayout>
-	<RelativeLayout style="@style/FieldLayout">
-		<EditText style="@style/LoginTextField" 
-			android:inputType="textPassword" android:id="@+id/passwordText"
-			android:hint="@string/passwordLabelText">
-		</EditText>
-	</RelativeLayout>
+    </LinearLayout>
+    <RelativeLayout style="@style/FieldLayout"
+                    android:layout_marginTop="40dp" android:id="@+id/emailFields">
+        <EditText style="@style/LoginTextField" android:id="@+id/emailText"
+                  android:hint="@string/emailLabelText">
+        </EditText>
+    </RelativeLayout>
+    <RelativeLayout style="@style/FieldLayout">
+        <EditText style="@style/LoginTextField"
+                  android:inputType="textPassword" android:id="@+id/passwordText"
+                  android:hint="@string/passwordLabelText">
+        </EditText>
+    </RelativeLayout>
 
-	<RelativeLayout android:layout_height="wrap_content" android:layout_marginTop="40dp"
-		android:id="@+id/buttonLayout" android:layout_width="match_parent">
-		<Button android:layout_height="wrap_content"
-			android:background="@drawable/button_login"
-			android:layout_alignParentTop="true" android:layout_centerHorizontal="true"
-			android:id="@+id/loginButton" android:text="@string/loginButtonText"
-			android:layout_width="wrap_content" />
+    <RelativeLayout android:layout_height="wrap_content" android:layout_marginTop="40dp"
+                    android:id="@+id/buttonLayout" android:layout_width="match_parent">
+        <Button android:id="@+id/loginButton"
+                android:layout_alignParentTop="true"
+                android:text="@string/loginButtonText"
+                style="@style/LoginButton"/>
 
-	</RelativeLayout>
-	<RelativeLayout android:layout_height="wrap_content"
-		android:layout_width="match_parent" android:id="@+id/registerReminder"
-		android:gravity="center">
-		<TextView android:layout_height="wrap_content"
-			android:layout_width="wrap_content" android:text="@string/registerNotification"
-			android:id="@+id/registerReminderText" android:gravity="center"
-			android:autoLink="all"/>
-	</RelativeLayout>
+    </RelativeLayout>
+    <RelativeLayout android:layout_height="wrap_content"
+                    android:layout_width="match_parent" android:id="@+id/registerReminder"
+                    android:gravity="center">
+        <TextView android:layout_height="wrap_content"
+                  android:layout_width="wrap_content" android:text="@string/registerNotification"
+                  android:id="@+id/registerReminderText" android:gravity="center"
+                  android:autoLink="all"/>
+    </RelativeLayout>
 
 </LinearLayout>
