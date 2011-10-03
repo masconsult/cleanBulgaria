@@ -1,43 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/app_background">
-	<LinearLayout android:layout_height="wrap_content" android:id="@+id/titleLayout"
-		android:layout_width="fill_parent" android:background="@drawable/title_bar" android:layout_alignParentTop="true">
-		<TextView android:text="@string/titleBar"
-			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:textSize="26sp" android:shadowColor="@android:color/black"
-			android:textStyle="bold" android:textColor="@android:color/white"
-			android:gravity="center" android:layout_gravity="center"/>
-	</LinearLayout>
-	<Button android:layout_height="wrap_content" android:text="Избери тип на отпадъците"
-		android:layout_below="@id/titleLayout" android:textStyle="bold" android:textSize="18sp"
-		android:id="@+id/wasteTypeSelectButton" android:layout_width="270dp" android:textColor="@color/text" android:layout_centerHorizontal="true" android:layout_marginTop="40dp"/>
-	<TextView android:layout_width="wrap_content" android:id="@+id/approximateQuantityLabel"
-		android:layout_height="wrap_content" android:text="Приблизително количество"
-		android:layout_below="@+id/wasteTypeSelectButton" android:textStyle="bold" android:layout_marginBottom="2dp"
-		android:layout_alignParentLeft="true" android:layout_marginLeft="25dp" android:textColor="@color/text" android:layout_marginTop="20dp"/>
+                android:layout_width="match_parent" android:layout_height="match_parent"
+                android:background="@drawable/app_background">
+    <LinearLayout android:layout_height="wrap_content" android:id="@+id/titleLayout"
+                  android:layout_width="fill_parent" android:background="@drawable/title_bar"
+                  android:layout_alignParentTop="true">
+        <TextView android:text="@string/titleBar"
+                  style="@style/TitleBar"/>
+    </LinearLayout>
+    <Button android:id="@+id/wasteTypeSelectButton"
+            android:layout_below="@id/titleLayout"
+            style="@style/WasteTypeSelectButton"
+            android:text="@string/wasteType"/>
+    <TextView android:id="@+id/approximateQuantityLabel"
+              android:layout_below="@+id/wasteTypeSelectButton"
+              style="@style/ApproximateQuantityLabel"
+              android:text="@string/approximateQuantityLabel"
+              />
 
-	<EditText
-		android:inputType="number" android:layout_height="wrap_content"
-		android:layout_below="@+id/approximateQuantityLabel" android:layout_alignParentLeft="true" android:layout_marginLeft="27dp" android:layout_width="100dp"
-		android:id="@+id/quantityText">
-		<requestFocus/>
-	</EditText>
-	<Spinner android:layout_height="wrap_content"
+    <EditText android:id="@+id/quantityText"
+              android:layout_below="@+id/approximateQuantityLabel"
+              style="@style/QuantityText"
+            >
+        <requestFocus/>
+    </EditText>
+    <Spinner android:id="@+id/metricTypeSpinner"
              android:layout_toRightOf="@id/quantityText"
-		android:layout_alignBottom="@+id/quantityText" android:layout_marginLeft="5dp"
-		android:id="@+id/metricTypeSpinner"
-		android:layout_width="160dp" android:prompt="@string/wasteMetricPrompt"/>
+             android:layout_alignBottom="@+id/quantityText"
+             style="@style/MetricType"
+             android:prompt="@string/wasteMetricPrompt"/>
 
-	<TextView android:text="Допълнителна информация"
-		android:layout_height="wrap_content" android:layout_width="wrap_content"
-		android:layout_below="@+id/quantityText" android:textStyle="bold"
-		android:layout_alignParentLeft="true" android:id="@+id/wasteInfoLabel" android:layout_marginLeft="25dp" android:textColor="@color/text" android:layout_marginTop="10dp"/>
-	<EditText android:id="@+id/wasteInfoTextEdit" android:layout_marginTop="2dp"
-		android:inputType="textMultiLine" android:layout_below="@+id/wasteInfoLabel"
-        android:layout_width="270dp" android:layout_centerHorizontal="true" android:layout_height="100dp"/>
-	<Button android:layout_height="wrap_content" android:text="Маркирай" android:textColor="@color/text"
-		android:layout_width="270dp" android:layout_centerHorizontal="true" android:layout_marginTop="3dp" android:textSize="18sp" android:textStyle="bold"
-		android:id="@+id/uploadDataButton" android:layout_below="@+id/wasteInfoTextEdit"/>
+    <TextView android:id="@+id/wasteInfoLabel"
+              android:layout_below="@+id/quantityText"
+              style="@style/AdditionalInfoLabel"
+              android:text="@string/additionalInfoLabel"
+            />
+    <EditText android:id="@+id/wasteInfoTextEdit"
+              android:layout_below="@+id/wasteInfoLabel"
+              style="@style/WasteInfo"
+              />
+    <Button android:id="@+id/uploadDataButton"
+            android:layout_below="@+id/wasteInfoTextEdit"
+            style="@style/UploadDataButton"
+            android:text="@string/uploadDataButton"
+            />
 
 </RelativeLayout>

@@ -10,4 +10,66 @@
 		<item name="android:layout_width">match_parent</item>
 		<item name="android:layout_height">60dp</item>
 	</style>
+    <style name="TitleBar">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">26sp</item>
+        <item name="android:shadowColor">@android:color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+    </style>
+    <style name="UploadActivityButton">
+        <item name="android:layout_width">270dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+    <style name="WasteTypeSelectButton" parent="UploadActivityButton">
+        <item name="android:layout_marginTop">40dp</item>
+    </style>
+    <style name="UploadDataButton" parent="UploadActivityButton">
+        <item name="android:layout_marginTop">3dp</item>
+    </style>
+    <style name="AdditionalInfoLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_marginLeft">25dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="ApproximateQuantityLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_marginLeft">25dp</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+    </style>
+    <style name="WasteInfo">
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_width">270dp</item>
+        <item name="android:layout_centerHorizontal">true</item>
+        <item name="android:layout_height">100dp</item>
+    </style>
+    <style name="MetricType">
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_width">160dp</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="QuantityText">
+        <item name="android:inputType">number</item>
+        <item name="android:layout_marginLeft">27dp</item>
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 </resources>
