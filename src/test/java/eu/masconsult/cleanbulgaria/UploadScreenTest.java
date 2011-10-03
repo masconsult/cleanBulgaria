@@ -170,7 +170,7 @@ public class UploadScreenTest {
 
   private void simulateRotation() {
     Bundle data = new Bundle();
-    uploadActivity.onSaveInstanceState(data);
+//    uploadActivity.onSaveInstanceState(data);
     uploadActivity.onCreate(data);
   }
 

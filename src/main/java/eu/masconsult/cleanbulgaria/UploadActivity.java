@@ -113,44 +113,44 @@ public class UploadActivity extends RoboActivity {
     super.onCreate(savedInstanceState);
     tracker.startNewSession(ANALITICS_ID, this);
     setContentView(R.layout.upload_screen_layout);
-    if (savedInstanceState != null) {
-      metric = savedInstanceState.getString("metric");
-      quantity = savedInstanceState.getString("quantity");
-      wasteInfo = savedInstanceState.getString("wasteInfo");
-      selectedWasteTypes = savedInstanceState.getBooleanArray("selectedWasteTypes");
-      imageFileUri = savedInstanceState.getParcelable("imageUri");
-      quantityText.setText(quantity);
-      wasteInfoTextEdit.setText(wasteInfo);
-    } else {
-      imageFileUri = getIntent().getData();
-    }
+//    if (savedInstanceState != null) {
+//      metric = savedInstanceState.getString("metric");
+//      quantity = savedInstanceState.getString("quantity");
+//      wasteInfo = savedInstanceState.getString("wasteInfo");
+//      selectedWasteTypes = savedInstanceState.getBooleanArray("selectedWasteTypes");
+//      imageFileUri = savedInstanceState.getParcelable("imageUri");
+//      quantityText.setText(quantity);
+//      wasteInfoTextEdit.setText(wasteInfo);
+//    } else {
+//      imageFileUri = getIntent().getData();
+//    }
 
-    progressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
-    progressDialog.setTitle(R.string.loginProcessTitle);
-    progressDialog.setMessage(getString(R.string.loginProcessMessage));
+//    progressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
+//    progressDialog.setTitle(R.string.loginProcessTitle);
+//    progressDialog.setMessage(getString(R.string.loginProcessMessage));
 
-    final AlertDialog.Builder dialogBuilder = setUpDialogBuilder();
-    wasteTypeSelectButton.setOnClickListener(new WasteTypeButtonListener(dialogBuilder));
-    uploadDataButton.setOnClickListener(new UploadDataButtonListener());
-    setUpMetricSpinner();
-    try {
-      positionManager.initPositionManager(getApplicationContext());
-    } catch (PositionException e) {
-      e.printStackTrace();
-    }
+//    final AlertDialog.Builder dialogBuilder = setUpDialogBuilder();
+//    wasteTypeSelectButton.setOnClickListener(new WasteTypeButtonListener(dialogBuilder));
+//    uploadDataButton.setOnClickListener(new UploadDataButtonListener());
+//    setUpMetricSpinner();
+//    try {
+//      positionManager.initPositionManager(getApplicationContext());
+//    } catch (PositionException e) {
+//      e.printStackTrace();
+//    }
   }
 
-  @Override
-  protected void onSaveInstanceState(Bundle savedState) {
-    super.onSaveInstanceState(savedState);
-    savedState.putParcelable("imageUri", imageFileUri);
-
-    savedState.putString("metric", metric);
-    savedState.putString("quantity", quantity);
-    savedState.putString("wasteInfo", wasteInfo);
-    savedState.putBooleanArray("selectedWasteTypes", selectedWasteTypes);
-
-  }
+//  @Override
+//  protected void onSaveInstanceState(Bundle savedState) {
+//    super.onSaveInstanceState(savedState);
+//    savedState.putParcelable("imageUri", imageFileUri);
+//
+//    savedState.putString("metric", metric);
+//    savedState.putString("quantity", quantity);
+//    savedState.putString("wasteInfo", wasteInfo);
+//    savedState.putBooleanArray("selectedWasteTypes", selectedWasteTypes);
+//
+//  }
 
   private void setUpMetricSpinner() {
     ArrayAdapter adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.metricTypes, android.R.layout.simple_spinner_item);

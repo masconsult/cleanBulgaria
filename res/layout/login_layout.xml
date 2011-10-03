@@ -39,7 +39,7 @@
 		<TextView android:layout_height="wrap_content"
 			android:layout_width="wrap_content" android:text="@string/registerNotification"
 			android:id="@+id/registerReminderText" android:gravity="center"
-			android:autoLink="all"></TextView>
+			android:autoLink="all"/>
 	</RelativeLayout>
 
 </LinearLayout>
