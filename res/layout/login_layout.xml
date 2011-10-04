@@ -21,7 +21,7 @@
         </EditText>
     </RelativeLayout>
 
-    <RelativeLayout android:layout_height="wrap_content" android:layout_marginTop="40dp"
+    <RelativeLayout android:layout_height="wrap_content" android:layout_marginTop="20dp"
                     android:id="@+id/buttonLayout" android:layout_width="match_parent">
         <Button android:id="@+id/loginButton"
                 android:layout_alignParentTop="true"
@@ -30,12 +30,17 @@
 
     </RelativeLayout>
     <RelativeLayout android:layout_height="wrap_content"
-                    android:layout_width="match_parent" android:id="@+id/registerReminder"
+                    android:layout_width="match_parent" android:id="@+id/registerReminder" android:layout_marginTop="10dp"
                     android:gravity="center">
         <TextView android:layout_height="wrap_content"
                   android:layout_width="wrap_content" android:text="@string/registerNotification"
-                  android:id="@+id/registerReminderText" android:gravity="center"
-                  android:autoLink="all"/>
+                  android:id="@+id/registerReminderText" android:gravity="center" android:textColor="@color/text" android:textSize="16sp"
+                  />
+        <TextView android:layout_height="wrap_content"
+                  android:layout_width="wrap_content" android:layout_marginTop="3dp"
+                android:layout_below="@id/registerReminderText" android:gravity="center" android:textSize="16sp"
+                android:textColorLink="@color/link" android:autoLink="all" android:text="@string/registerLink" android:layout_marginLeft="4dp"/>
+
     </RelativeLayout>
 
 </LinearLayout>

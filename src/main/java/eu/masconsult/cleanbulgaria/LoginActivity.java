@@ -29,7 +29,6 @@ public class LoginActivity extends RoboActivity {
 	@InjectView(R.id.loginButton)
 	private Button loginButton;
 
-
 	@Inject
 	private Connection connection;
 
