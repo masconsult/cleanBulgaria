@@ -111,7 +111,7 @@ public class UploadActivity extends RoboActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    tracker.startNewSession(ANALITICS_ID, this);
+    tracker.startNewSession("UA-26140377-1", this);
     setContentView(R.layout.upload_screen_layout);
     if (savedInstanceState != null) {
       metric = savedInstanceState.getString("metric");
@@ -197,6 +197,7 @@ public class UploadActivity extends RoboActivity {
       invalidFile.show();
       return false;
     }
+
 
     return true;
   }
