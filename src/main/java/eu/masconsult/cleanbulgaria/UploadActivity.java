@@ -153,11 +153,12 @@ public class UploadActivity extends RoboActivity {
   }
 
   private void setUpMetricSpinner() {
-    ArrayAdapter adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.metricTypes, android.R.layout.simple_spinner_item);
+    ArrayAdapter adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.metricTypes, R.layout.spinner_textview);
     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     metricTypeSpinner.setAdapter(adapter);
     metricTypeSpinner.setSelection(Integer.parseInt(metric) - 1);
     metricTypeSpinner.setOnItemSelectedListener(new OnMetricTypeSelectedListener());
+
   }
 
   private AlertDialog.Builder setUpDialogBuilder() {

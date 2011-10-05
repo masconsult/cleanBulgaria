@@ -4,7 +4,7 @@
     <string-array name="metricTypes">
         <item>Чувал(а)</item>
         <item>Камион(а)</item>
-        <item>Не мога да определя</item>
+        <item>Без мярка</item>
     </string-array>
     
     <string-array name="wasteTypes">
