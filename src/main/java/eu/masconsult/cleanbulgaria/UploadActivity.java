@@ -24,7 +24,7 @@ import java.io.IOException;
 
 public class UploadActivity extends RoboActivity {
 
-  private static final String ANALITICS_ID = "UA-YOUR-ACCOUNT-HERE";
+  private static final String    ANALITICS_ID       = "UA-26140377-1";
 
   @InjectView(R.id.wasteTypeSelectButton)
   private Button wasteTypeSelectButton;
@@ -111,7 +111,7 @@ public class UploadActivity extends RoboActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    tracker.startNewSession("UA-26140377-1", this);
+    tracker.startNewSession(ANALITICS_ID, this);
     setContentView(R.layout.upload_screen_layout);
     if (savedInstanceState != null) {
       metric = savedInstanceState.getString("metric");
