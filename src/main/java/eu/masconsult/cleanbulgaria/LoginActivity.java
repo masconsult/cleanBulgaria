@@ -42,8 +42,6 @@ public class LoginActivity extends RoboActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.login_layout);
-		emailTextEdit.setText("dani7@abv.bg");
-		passwordTextEdit.setText("alabala");
 
 		progressDialog = new ProgressDialog(this, ProgressDialog.STYLE_SPINNER);
 		progressDialog.setTitle(R.string.loginProcessTitle);
