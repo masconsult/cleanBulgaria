@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Clean Bulgaria</string>
-    <string name="emailLabelText">Е-мейл:</string>
-    <string name="passwordLabelText">Парола:</string>
+    <string name="app_name">Чиста България</string>
+    <string name="emailLabelText">Е-мейл</string>
+    <string name="passwordLabelText">Парола</string>
     <string name="loginButtonText">Влез</string>
     <string name="emptyFieldsMessage">Попълнете празните полета</string>
     <string name="invalidEmaul">Въведете валиден Е-Майл</string>
@@ -11,10 +11,10 @@
     <string name="invalidCredentials">Въведенети данни са невалидни</string>
     <string name="noConnection">В момента няма връзка със сървъра, опитайте по-късно</string>
     <string name="markRequestSuccessful">Заявката Ви беше изпратена успешно</string>
-    <string name="masconsultInfo"><br />--<br />Изпратено чрез CleanBulgaria<br /><a href="http://example.com">&lt;example.com/&gt;</a></string>
+    <string name="masconsultInfo"><br />--<br />Изпратено чрез ЧистаБългария<br /><a href="http://example.com">&lt;example.com/&gt;</a></string>
     <string name="registerNotification">За да използвате приложението,\n регистрирайте се на</string>
     <string name="registerLink">http://ng.btv.bg/map/register.php</string>
-    <string name="titleBar">Clean Bulgaria</string>
+    <string name="titleBar">Чиста България</string>
     <string name="wasteType">Избери тип на отпадъците</string>
     <string name="approximateQuantityLabel">Приблизително количество</string>
     <string name="additionalInfoLabel">Допълнителна информация</string>
