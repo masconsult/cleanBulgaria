@@ -13,34 +13,34 @@
             style="@style/WasteTypeSelectButton"
             android:text="@string/wasteType"/>
     <TextView android:id="@+id/approximateQuantityLabel"
-              android:layout_below="@+id/wasteTypeSelectButton"
+              android:layout_below="@id/wasteTypeSelectButton"
               style="@style/ApproximateQuantityLabel"
               android:text="@string/approximateQuantityLabel"
               />
 
     <EditText android:id="@+id/quantityText"
-              android:layout_below="@+id/approximateQuantityLabel"
+              android:layout_below="@id/approximateQuantityLabel"
               style="@style/QuantityText"
             >
         <requestFocus/>
     </EditText>
     <Spinner android:id="@+id/metricTypeSpinner"
              android:layout_toRightOf="@id/quantityText"
-             android:layout_alignBottom="@+id/quantityText"
+             android:layout_alignBottom="@id/quantityText"
              style="@style/MetricType"
              android:prompt="@string/wasteMetricPrompt"/>
 
     <TextView android:id="@+id/wasteInfoLabel"
-              android:layout_below="@+id/quantityText"
+              android:layout_below="@id/quantityText"
               style="@style/AdditionalInfoLabel"
               android:text="@string/additionalInfoLabel"
             />
     <EditText android:id="@+id/wasteInfoTextEdit"
-              android:layout_below="@+id/wasteInfoLabel"
+              android:layout_below="@id/wasteInfoLabel"
               style="@style/WasteInfo"
               />
     <Button android:id="@+id/uploadDataButton"
-            android:layout_below="@+id/wasteInfoTextEdit"
+            android:layout_below="@id/wasteInfoTextEdit"
             style="@style/UploadDataButton"
             android:text="@string/uploadDataButton"
             />

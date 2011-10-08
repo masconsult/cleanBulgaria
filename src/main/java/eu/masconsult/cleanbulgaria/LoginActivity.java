@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.google.inject.Inject;
+
 import eu.masconsult.cleanbulgaria.connection.Connection;
 import eu.masconsult.cleanbulgaria.connection.ConnectionException;
 import eu.masconsult.cleanbulgaria.connection.InvalidDataException;
@@ -33,15 +34,12 @@ public class LoginActivity extends RoboActivity {
 	private Connection connection;
 
 
-	private LoginTask loginTask;
-
 	private ProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		loginTask = new LoginTask(getApplicationContext());
 
 		setContentView(R.layout.login_layout);
 		emailTextEdit.setText("dani7@abv.bg");
@@ -63,6 +61,7 @@ public class LoginActivity extends RoboActivity {
 					validationToast.show();
 					return;
 				}
+				LoginTask loginTask = new LoginTask(getApplicationContext());
 				loginTask.execute(email, password);
 			}
 		});
